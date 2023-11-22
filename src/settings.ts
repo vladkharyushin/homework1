@@ -140,10 +140,12 @@ app.put('/videos/:id', (req: RequestWithBodyAndParams<Params, UpdateVideoTo>, re
 
     if(!title || title.trim().length < 1 || title.trim().length > 40) {
         error.errorsMessages.push({message: "Invalid title", field: "title"})
-        if(!author || author.trim().length < 1 || author.trim().length > 20) {
-            error.errorsMessages.push({message: "Invalid author", field: "author"})
-        }
     }
+
+    if(!author || author.trim().length < 1 || author.trim().length > 20) {
+        error.errorsMessages.push({message: "Invalid author", field: "author"})
+    }
+
     if (Array.isArray(availableResolutions)) {
         availableResolutions.map((r) => {
             !AvailableResolutions.includes(r) && error.errorsMessages.push({
@@ -154,8 +156,14 @@ app.put('/videos/:id', (req: RequestWithBodyAndParams<Params, UpdateVideoTo>, re
     } else {
         availableResolutions = []
     }
+
     if (typeof canBeDownloaded === "undefined") {
         canBeDownloaded = false
+    }
+    if (typeof canBeDownloaded !== "undefined" && typeof canBeDownloaded !== 'boolean') {
+        error.errorsMessages.push({
+            message: "Invalid canBeDownloaded",
+            field: "canBeDownloaded"})
     }
     if (typeof minAgeRestriction !== "undefined" && typeof minAgeRestriction === "number") {
         minAgeRestriction < 1 && minAgeRestriction > 18 && error.errorsMessages.push({
@@ -197,6 +205,8 @@ app.delete('/videos/:id', (req: Request, res: Response) => {
             return
         }
     }
+    return res.sendStatus(404)
+
 })
 
 // app.delete('/videos/:id', (req: Request, res: Response) => {
