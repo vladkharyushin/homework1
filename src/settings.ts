@@ -166,7 +166,7 @@ app.put('/videos/:id', (req: RequestWithBodyAndParams<Params, UpdateVideoTo>, re
             field: "canBeDownloaded"})
     }
     if (typeof minAgeRestriction !== "undefined" && typeof minAgeRestriction === "number") {
-        +minAgeRestriction < 1 && +minAgeRestriction > 18 && error.errorsMessages.push({
+        minAgeRestriction < 1 || minAgeRestriction > 18 && error.errorsMessages.push({
             message: "Invalid minAgeRestriction",
             field: "minAgeRestriction"})
     } else {
