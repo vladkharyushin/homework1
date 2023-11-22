@@ -85,9 +85,9 @@ app.post('/videos', (req: RequestWithBody<CreateVideoTo>, res: Response) => {
 
     if (!title || title.trim().length < 1 || title.trim().length > 40) {
         error.errorsMessages.push({message: "Invalid title", field: "title"})
-        if(!author || author.trim().length < 1 || author.trim().length > 20) {
-            error.errorsMessages.push({message: "Invalid author", field: "author"})
-        }
+    }
+    if (!author || author.trim().length < 1 || author.trim().length > 20) {
+        error.errorsMessages.push({message: "Invalid author", field: "author"})
     }
     if (Array.isArray(availableResolutions)) {
         availableResolutions.map((r) => {
@@ -166,7 +166,7 @@ app.put('/videos/:id', (req: RequestWithBodyAndParams<Params, UpdateVideoTo>, re
             field: "canBeDownloaded"})
     }
     if (typeof minAgeRestriction !== "undefined" && typeof minAgeRestriction === "number") {
-        minAgeRestriction < 1 && minAgeRestriction > 18 && error.errorsMessages.push({
+        +minAgeRestriction < 1 && +minAgeRestriction > 18 && error.errorsMessages.push({
             message: "Invalid minAgeRestriction",
             field: "minAgeRestriction"})
     } else {
