@@ -48,6 +48,11 @@ let videos: VideoType[] = [
     }
 ]
 
+app.delete('/testing/all-data', (req: Request, res: Response) => {
+    videos = []
+    res.sendStatus(204)
+})
+
 app.get('/videos', (req: Request, res: Response) => {
     res.send(videos)
 })
@@ -194,13 +199,13 @@ app.delete('/videos/:id', (req: Request, res: Response) => {
     }
 })
 
-app.delete('/videos/:id', (req: Request, res: Response) => {
-    const id = +req.params.id
-    const newVideos = videos.filter(v => v.id !== id)
-    if (newVideos.length < videos.length) {
-        videos = newVideos
-        res.send(204)
-    } else {
-        res.send(404)
-    }
-})
+// app.delete('/videos/:id', (req: Request, res: Response) => {
+//     const id = +req.params.id
+//     const newVideos = videos.filter(v => v.id !== id)
+//     if (newVideos.length < videos.length) {
+//         videos = newVideos
+//         res.send(204)
+//     } else {
+//         res.send(404)
+//     }
+// })
