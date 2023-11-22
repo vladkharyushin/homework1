@@ -22,7 +22,7 @@ type CreateVideoTo = {
 
 type RequestWithBodyAndParams<P, B> = Request<P, {}, B, {}>
 
-type VideoType = {
+export type VideoType = {
     id: number
     title: string
     author: string
@@ -33,7 +33,7 @@ type VideoType = {
     availableResolutions: typeof AvailableResolutions
 }
 
-const videos: VideoType[] = [
+let videos: VideoType[] = [
     {
         id: 1,
         title: "string",
@@ -78,7 +78,7 @@ app.post('/videos', (req: RequestWithBody<CreateVideoTo>, res: Response) => {
     }
     let {title, author, availableResolutions} = req.body
 
-    if(!title || title.trim().length < 1 || title.trim().length > 40) {
+    if (!title || title.trim().length < 1 || title.trim().length > 40) {
         error.errorsMessages.push({message: "Invalid title", field: "title"})
         if(!author || author.trim().length < 1 || author.trim().length > 20) {
             error.errorsMessages.push({message: "Invalid author", field: "author"})
@@ -184,11 +184,6 @@ app.put('/videos/:id', (req: RequestWithBodyAndParams<Params, UpdateVideoTo>, re
     res.sendStatus(204)
 })
 
-type DeleteVideo = {
-    id: string
-    videoIndex: number
-}
-
 app.delete('/videos/:id', (req: Request, res: Response) => {
     for (let i = 0; i < videos.length; i++) {
         if (videos[i].id === +req.params.id) {
@@ -196,5 +191,16 @@ app.delete('/videos/:id', (req: Request, res: Response) => {
             res.sendStatus(204)
             return
         }
+    }
+})
+
+app.delete('/videos/:id', (req: Request, res: Response) => {
+    const id = +req.params.id
+    const newVideos = videos.filter(v => v.id !== id)
+    if (newVideos.length < videos.length) {
+        videos = newVideos
+        res.send(204)
+    } else {
+        res.send(404)
     }
 })
