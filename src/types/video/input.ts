@@ -1,4 +1,5 @@
-import {AvailableResolutions} from "../../settings";
+import {AvailableResolutions} from "./output";
+
 
 export type CreateVideoTo = {
     title: string,

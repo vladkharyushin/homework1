@@ -1,6 +1,6 @@
 import {Router, Request, Response} from "express";
 import {BlogRepository} from "../repositories/blog-repository";
-import {RequestWithParams} from "../types/common";
+import {Params, RequestWithBodyAndParams, RequestWithParams} from "../types/common";
 import {BlogParams} from "../types/blog/input";
 import {authMiddleware} from "../middlewares/auth/auth-middleware";
 import {blogPostValidation} from "../validators/blogs-validator";
@@ -30,3 +30,15 @@ blogRoute.post('/:id', authMiddleware, blogPostValidation(), inputModelValidatio
     }
     res.send(blog)
 })
+
+blogRoute.put('/:id', authMiddleware, blogPostValidation(), inputModelValidation, (req: RequestWithBodyAndParams<Params, BlogParams>, res: Response,) => {
+    const id = req.params.id
+    const blog = BlogRepository.getBlogById(id)
+
+    if(!blog){
+        res.sendStatus(404)
+        return
+    }
+    return res.sendStatus(204)
+}
+)

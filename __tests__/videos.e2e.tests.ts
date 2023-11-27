@@ -1,6 +1,7 @@
 import request from 'supertest'
-import {app, VideoType,} from '../src/settings'
+import {app} from '../src/settings'
 import {describe} from "node:test";
+import {VideoType} from "../src/types/video/output";
 
 enum CodeResponseEnum {
     Incorrect_values_400 = 400,
