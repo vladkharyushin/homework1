@@ -12,8 +12,18 @@ export class PostRepository {
         }
         return post
     }
-    static createPost(createPost: PostType) {
-        const newPost = db.posts.push(createPost)
-        return newPost
+    static createPost(postToCreate: PostType) {
+        db.posts.push(postToCreate)
+    }
+    static deletePostById(id: string) {
+        const postIndex = db.posts.findIndex(p => p.id === id)
+        const post = db.posts.find(p => p.id === id)
+
+        if(post) {
+            db.posts.splice(postIndex, 1)
+            return true
+        } else {
+            return false
+        }
     }
 }

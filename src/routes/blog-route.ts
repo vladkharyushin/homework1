@@ -14,7 +14,7 @@ blogRoute.get('/', (req: Request, res: Response) => {
     res.status(200).send(blogs)
 })
 
-blogRoute.get('/:id', authMiddleware, (req: RequestWithParams<BlogParams>, res: Response) => {
+blogRoute.get('/:id', (req: RequestWithParams<BlogParams>, res: Response) => {
     const id = req.params.id
     const blog = BlogRepository.getBlogById(id)
     if(!blog){
@@ -45,7 +45,7 @@ blogRoute.post('/', authMiddleware, blogPostValidation(), (req: RequestWithBody<
 //.send(blog)
 //})
 
-blogRoute.put('/:id', authMiddleware, blogPostValidation(), inputModelValidation, (req: RequestWithBodyAndParams<Params, BlogParams>, res: Response,) => {
+blogRoute.put('/:id', authMiddleware, blogPostValidation(), (req: RequestWithBodyAndParams<Params, BlogParams>, res: Response,) => {
     const id = req.params.id
     const blog = BlogRepository.getBlogById(id)
         const {name, description, websiteUrl} = req.body
@@ -60,7 +60,7 @@ blogRoute.put('/:id', authMiddleware, blogPostValidation(), inputModelValidation
     return res.sendStatus(204)
 })
 
-blogRoute.delete('/id', authMiddleware, blogPostValidation(), (req: RequestWithParams<BlogParams>, res: Response) => {
+blogRoute.delete('/id', authMiddleware, (req: RequestWithParams<BlogParams>, res: Response) => {
     const id = req.params.id
     const isDeleted = BlogRepository.deleteBlogById(id)
 
