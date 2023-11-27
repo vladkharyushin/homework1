@@ -6,7 +6,6 @@ import {authMiddleware} from "../middlewares/auth/auth-middleware";
 import {blogPostValidation} from "../validators/blogs-validator";
 import {inputModelValidation} from "../middlewares/inputModel/input-model-validation";
 import {randomUUID} from "crypto";
-import {db} from "../db/db";
 
 export const blogRoute = Router({})
 
@@ -55,18 +54,19 @@ blogRoute.put('/:id', authMiddleware, blogPostValidation(), inputModelValidation
         res.sendStatus(404)
         return
     }
-        (blog.name = name),
-            (blog.description = description),
-            (blog.websiteUrl = websiteUrl)
+        (blog.name = name);
+            (blog.description = description);
+            (blog.websiteUrl = websiteUrl);
     return res.sendStatus(204)
 })
 
 blogRoute.delete('/id', authMiddleware, blogPostValidation(), (req: RequestWithParams<BlogParams>, res: Response) => {
     const id = req.params.id
-    const blog = BlogRepository.getBlogById(id)
-    if (!blog) {
+    const isDeleted = BlogRepository.deleteBlogById(id)
+
+    if(isDeleted) {
+        res.sendStatus(204)
+    } else {
+        res.sendStatus(404)
     }
-    res.sendStatus(404)
-    return
-}
-)
+})

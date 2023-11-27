@@ -4,8 +4,8 @@ import {db} from "../db/db";
 export const testingRoute = Router({})
 
 testingRoute.delete('/all-data', (req: Request, res: Response) => {
-    db.videos.length = 0
-    db.blogs.length = 0
-    db.posts.length = 0
+    db.videos = []
+    db.blogs = []
+    db.posts = []
     res.sendStatus(204)
 })
