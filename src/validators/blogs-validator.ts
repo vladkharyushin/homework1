@@ -1,4 +1,5 @@
 import {body} from "express-validator";
+import {inputModelValidation} from "../middlewares/inputModel/input-model-validation";
 
 const nameValidation = body('name')
     .isString()
@@ -19,4 +20,4 @@ const websiteUrlValidation = body('websiteUrl')
     .matches('^https://([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$\n')
     .withMessage('Incorrect websiteUrl')
 
-export const blogPostValidation = () => [nameValidation, descriptionValidation, websiteUrlValidation]
+export const blogPostValidation = () => [nameValidation, descriptionValidation, websiteUrlValidation, inputModelValidation]

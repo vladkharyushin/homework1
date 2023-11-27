@@ -13,4 +13,7 @@ export class BlogRepository {
         }
         return blog
     }
+    static createBlog(createBlog: BlogType) {
+        db.blogs.push(createBlog)
+    }
 }
