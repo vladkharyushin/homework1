@@ -4,8 +4,8 @@ import {Params, RequestWithBody, RequestWithBodyAndParams, RequestWithParams} fr
 import {BlogParams} from "../types/blog/input";
 import {authMiddleware} from "../middlewares/auth/auth-middleware";
 import {blogPostValidation} from "../validators/blogs-validator";
-import {inputModelValidation} from "../middlewares/inputModel/input-model-validation";
 import {randomUUID} from "crypto";
+import {db} from "../db/db";
 
 export const blogRoute = Router({})
 
@@ -60,13 +60,29 @@ blogRoute.put('/:id', authMiddleware, blogPostValidation(), (req: RequestWithBod
     return res.sendStatus(204)
 })
 
-blogRoute.delete('/id', authMiddleware, (req: RequestWithParams<BlogParams>, res: Response) => {
-    const id = req.params.id
-    const isDeleted = BlogRepository.deleteBlogById(id)
+//blogRoute.delete('/:id', authMiddleware, (req: RequestWithParams<BlogParams>, res: Response) => {
+//    const id = req.params.id
+//    const isDeleted = BlogRepository.deleteBlogById(id)
+//
+//   if(isDeleted) {
+//        res.sendStatus(204)
+//    } else {
+//        res.sendStatus(404)
+//    }
+//})
 
-    if(isDeleted) {
-        res.sendStatus(204)
-    } else {
+blogRoute.delete('/:id', authMiddleware, blogPostValidation(), (req: RequestWithParams<BlogParams>, res: Response) => {
+    const id = req.params.id
+    const blog = BlogRepository.getBlogById(id)
+    if(!blog) {
         res.sendStatus(404)
+        return
     }
+    const  blogIndex = db.blogs.findIndex((b) => b.id == id)
+    if(blogIndex == -1) {
+        res.sendStatus(404)
+        return;
+    }
+    db.blogs.splice(blogIndex, 1)
+    res.sendStatus(204)
 })
