@@ -21,4 +21,9 @@ const websiteUrlValidation = body('websiteUrl')
 //    .matches('^https://([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$\n')
     .withMessage('Incorrect websiteUrl')
 
-export const blogPostValidation = () => [nameValidation, descriptionValidation, websiteUrlValidation, inputModelValidation]
+export const blogPostValidation = () => [
+    nameValidation,
+    descriptionValidation,
+    websiteUrlValidation,
+    inputModelValidation
+]
