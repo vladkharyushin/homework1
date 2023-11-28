@@ -2,6 +2,7 @@ import {body} from "express-validator";
 import {inputModelValidation} from "../middlewares/inputModel/input-model-validation";
 
 const nameValidation = body('name')
+    .exists()
     .isString()
     .trim()
     .isLength({min: 1, max: 15})

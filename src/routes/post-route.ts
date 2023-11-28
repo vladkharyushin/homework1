@@ -8,7 +8,6 @@ import {randomUUID} from "crypto";
 import {postValidation} from "../validators/posts-validator";
 import {BlogParams} from "../types/blog/input";
 import {PostType} from "../types/post/output";
-import {db} from "../db/db";
 
 export const postRoute = Router({})
 
@@ -60,29 +59,29 @@ postRoute.put('/:id', authMiddleware, postValidation(), (req: RequestWithBodyAnd
     return res.sendStatus(204)
 })
 
-//postRoute.delete('/:id', authMiddleware, postValidation(), (req: RequestWithParams<BlogParams>, res: Response) => {
-//    const id = req.params.id
-//    const isDeleted = PostRepository.deletePostById(id)
-//
-//    if(isDeleted) {
-//        res.sendStatus(204)
-//    } else {
-//        res.sendStatus(404)
-//   }
-//})
-
-postRoute.delete('/:id', authMiddleware, postValidation(), (req: RequestWithParams<PostParams>, res: Response) => {
+postRoute.delete('/:id', authMiddleware, (req: RequestWithParams<BlogParams>, res: Response) => {
     const id = req.params.id
-    const post = PostRepository.getPostById(id)
-    if(!post) {
+    const isDeleted = PostRepository.deletePostById(id)
+
+    if(isDeleted) {
+        res.sendStatus(204)
+    } else {
         res.sendStatus(404)
-        return
-    }
-   const  postIndex = db.posts.findIndex((p) => p.id == id)
-    if(postIndex == -1) {
-        res.sendStatus(404)
-        return;
-    }
-    db.posts.splice(postIndex, 1)
-    res.sendStatus(204)
+   }
 })
+
+//postRoute.delete('/:id', authMiddleware, postValidation(), (req: RequestWithParams<PostParams>, res: Response) => {
+//    const id = req.params.id
+//    const post = PostRepository.getPostById(id)
+//    if(!post) {
+//        res.sendStatus(404)
+//       return
+//    }
+//   const  postIndex = db.posts.findIndex((p) => p.id == id)
+//    if(postIndex == -1) {
+//       res.sendStatus(404)
+//        return;
+//    }
+//    db.posts.splice(postIndex, 1)
+//   res.sendStatus(204)
+//})
