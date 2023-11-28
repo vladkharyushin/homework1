@@ -15,6 +15,7 @@ postRoute.get('/', (req: Request, res: Response) => {
     res.status(200).send(posts)
 })
 
+
 postRoute.get('/:id', (req: RequestWithParams<PostParams>, res: Response) => {
     const id = req.params.id
     const post = PostRepository.getPostById(id)
