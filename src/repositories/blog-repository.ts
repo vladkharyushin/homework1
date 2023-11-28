@@ -18,15 +18,15 @@ export class BlogRepository {
         db.blogs.push(createBlog)
     }
 
-//    static deleteBlogById(id: string) {
-//        const blogIndex = db.blogs.findIndex(b => b.id === id)
-//        const blog = db.blogs.find(b => b.id === id)
-//
-//        if(blog) {
-//            db.blogs.splice(blogIndex, 1)
-//            return true
-//        } else {
-//            return false
-//        }
-// }
+    static deleteBlogById(id: string) {
+        const blogIndex = db.blogs.findIndex(b => b.id === id)
+        const blog = db.blogs.find(b => b.id === id)
+
+       if(blog) {
+            db.blogs.splice(blogIndex, 1)
+            return true
+        } else {
+            return false
+        }
+ }
 }
