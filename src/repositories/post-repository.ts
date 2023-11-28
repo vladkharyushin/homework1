@@ -17,16 +17,15 @@ export class PostRepository {
     static createNewPost(createdPost: PostType) {
         db.posts.push(createdPost)
     }
+    static deletePostById(id: string) {
+        const postIndex = db.posts.findIndex(p => p.id === id)
+        const post = db.posts.find(p => p.id === id)
+
+        if(post) {
+            db.posts.splice(postIndex, 1)
+            return true
+        } else {
+            return false
+        }
+    }
 }
-//    static deletePostById(id: string) {
-//        const postIndex = db.posts.findIndex(p => p.id === id)
-//        const post = db.posts.find(p => p.id === id)
-//
-//        if(post) {
-//            db.posts.splice(postIndex, 1)
-//            return true
-//        } else {
-//            return false
-//        }
-//    }
-//}

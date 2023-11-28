@@ -35,15 +35,6 @@ blogRoute.post('/', authMiddleware, blogPostValidation(), (req: RequestWithBody<
     return res.status(201).send(newBlog)
 })
 
-//blogRoute.post('/:id', authMiddleware, blogPostValidation(), (req: RequestWithParams<BlogParams>, res: Response) => {
-//    const id = req.params.id
- //   const blog = BlogRepository.getBlogById(id)
- //   if(!blog){
-//        res.sendStatus(404)
-//    }
-//.send(blog)
-//})
-
 blogRoute.put('/:id', authMiddleware, blogPostValidation(), (req: RequestWithBodyAndParams<Params, BlogParams>, res: Response,) => {
     const id = req.params.id
     const blog = BlogRepository.getBlogById(id)
