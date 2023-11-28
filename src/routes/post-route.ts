@@ -7,6 +7,7 @@ import {BlogRepository} from "../repositories/blog-repository";
 import {randomUUID} from "crypto";
 import {postValidation} from "../validators/posts-validator";
 import {BlogParams} from "../types/blog/input";
+import {PostType} from "../types/post/output";
 
 export const postRoute = Router({})
 
@@ -14,7 +15,6 @@ postRoute.get('/', (req: Request, res: Response) => {
     const posts = PostRepository.getAllPosts()
     res.status(200).send(posts)
 })
-
 
 postRoute.get('/:id', (req: RequestWithParams<PostParams>, res: Response) => {
     const id = req.params.id
@@ -31,15 +31,16 @@ postRoute.post('/', authMiddleware, postValidation(), (req: RequestWithBody<Post
 
     if(!blog) return res.sendStatus(404)
 
-    const newPost = {
+    const newPost: PostType = {
         id: randomUUID(),
         title,
         shortDescription,
         content,
-        blogId
+        blogId,
+        blogName: blog.name
     }
     PostRepository.createNewPost(newPost)
-    return res.sendStatus(201).send(newPost)
+    return res.status(201).send(newPost)
 })
 
 postRoute.put('/:id', authMiddleware, postValidation(), (req: RequestWithBodyAndParams<Params, PostParams>, res: Response) => {
