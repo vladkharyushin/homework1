@@ -6,14 +6,12 @@ export type BlogParams = {
 };
 
 export type UpdateBlogData = {
-    id: string
     name: string;
     description: string;
     websiteUrl: string;
 };
 
 export type InputBlogType = {
-    id: string
     name: string;
     description: string;
     websiteUrl: string;

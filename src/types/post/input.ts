@@ -1,5 +1,4 @@
 export type PostParams = {
-    id: string
     title: string;
     shortDescription: string;
     content: string;
