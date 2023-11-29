@@ -1,38 +1,27 @@
-import {VideoType} from "../types/video/output";
+import {MongoClient} from "mongodb";
 import {BlogType} from "../types/blog/output";
 import {PostType} from "../types/post/output";
 
-type DBType = {
-    videos: VideoType[]
-    blogs: BlogType[]
-    posts: PostType[]
-}
+export const port = 80;
 
-export let db: DBType = {
-    videos: [{
-        id: 1,
-        title: "string",
-        author: "string",
-        canBeDownloaded: true,
-        minAgeRestriction: null,
-        createdAt: "2023-11-20T14:28:34.069Z",
-        publicationDate: "2023-11-20T14:28:34.069Z",
-        availableResolutions: [
-            "P144"
-        ]
-    }],
-    blogs: [{
-        id: "string",
-        name: "string",
-        description: "string",
-        websiteUrl: "string"
-    }],
-    posts: [{
-        id: "string",
-        title: "string",
-        shortDescription: "string",
-        content: "string",
-        blogId: "string",
-        blogName: "string"
-    }]
+//const mongoUrl = 'mongodb://localhost:27017'
+const mongoUrl = 'mongodb+srv://vladislavkharyushin:311097Vx@cluster0.zirpent.mongodb.net/?retryWrites=true&w=majority'
+
+const client = new MongoClient(mongoUrl)
+
+const db = client.db('node-blog')
+
+export const blogCollection = db.collection<BlogType>('blog')
+
+export const postCollection = db.collection<PostType>('post')
+
+export const runDb = async () => {
+    try {
+        await client.connect()
+        console.log('Client connected to DB')
+        console.log(`Listen on port ${port}`)
+    }catch (e) {
+        console.log(`${e}`)
+        await client.close()
+    }
 }
