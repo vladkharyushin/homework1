@@ -1,11 +1,18 @@
 import {MongoClient} from "mongodb";
 import {BlogType} from "../types/blog/output";
 import {PostType} from "../types/post/output";
+import dotenv from 'dotenv'
+dotenv.config()
 
 export const port = 80;
 
-//const mongoUrl = 'mongodb://localhost:27017'
-const mongoUrl = 'mongodb+srv://vladislavkharyushin:311097Vx@cluster0.zirpent.mongodb.net/?retryWrites=true&w=majority'
+const mongoUrl = process.env.MONGO_URL
+
+console.log(mongoUrl)
+
+if(!mongoUrl){
+    throw new Error('URL not found')
+}
 
 const client = new MongoClient(mongoUrl)
 
