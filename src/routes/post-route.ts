@@ -4,70 +4,67 @@ import {authMiddleware} from "../middlewares/auth/auth-middleware";
 import {Params, RequestWithBody, RequestWithBodyAndParams, RequestWithParams} from "../types/common";
 import {PostParams} from "../types/post/input";
 import {BlogRepository} from "../repositories/blog-repository";
-import {randomUUID} from "crypto";
 import {postValidation} from "../validators/posts-validator";
 import {BlogParams} from "../types/blog/input";
-import {PostType} from "../types/post/output";
+import {OutputPostType} from "../types/post/output";
 
 export const postRoute = Router({})
 
-postRoute.get('/', (req: Request, res: Response) => {
-    const posts = PostRepository.getAllPosts()
+postRoute.get('/', async (req: Request, res: Response) => {
+    const posts = await PostRepository.getAllPosts()
     res.status(200).send(posts)
 })
 
-postRoute.get('/:id', (req: RequestWithParams<PostParams>, res: Response) => {
+postRoute.get('/:id', async (req: RequestWithParams<Params>, res: Response) => {
     const id = req.params.id
-    const post = PostRepository.getPostById(id)
+    const post = await PostRepository.getPostById(id)
     if(!post){
         res.sendStatus(404)
     }
     res.status(200).send(post)
 })
 
-postRoute.post('/', authMiddleware, postValidation(), (req: RequestWithBody<PostParams>, res: Response) => {
-    let {title, shortDescription, content, blogId} = req.body
-    const blog = BlogRepository.getBlogById(blogId)
+postRoute.post('/', authMiddleware, postValidation(), async (req: RequestWithBody<PostParams>, res: Response) => {
+        const blog = await BlogRepository.getBlogById(req.body.blogId);
+        if (!blog) {
+            res.sendStatus(404)
+            return
+        }
+        const post = await PostRepository.createNewPost({
+            ...req.body,
+            blogName: blog.name,
+        })
 
-    if(!blog) return res.sendStatus(404)
+        return res.status(201).send(post)
+    })
 
-    const newPost: PostType = {
-        id: randomUUID(),
-        title,
-        shortDescription,
-        content,
-        blogId,
-        blogName: blog.name
-    }
-    PostRepository.createNewPost(newPost)
-    return res.status(201).send(newPost)
-})
-
-postRoute.put('/:id', authMiddleware, postValidation(), (req: RequestWithBodyAndParams<Params, PostParams>, res: Response) => {
+postRoute.put('/:id', authMiddleware, postValidation(), async (req: RequestWithBodyAndParams<Params, PostParams>, res: Response) => {
     const id = req.params.id
-    const post = PostRepository.getPostById(id)
-    const {title, shortDescription, content, blogId} = req.body
+    let post: OutputPostType | null = await PostRepository.getPostById(id)
+    let { title, shortDescription, content, blogId } = req.body
 
-    if(!post){
+    if (!post) {
         res.sendStatus(404)
         return
     }
-    (post.title = title);
-    (post.shortDescription = shortDescription);
-    (post.content = content);
-    (post.blogId = blogId);
+
+    (post.title = title),
+        (post.shortDescription = shortDescription),
+        (post.content = content),
+        (post.blogId = blogId)
+    await PostRepository.updatePost(id, post);
+
     return res.sendStatus(204)
 })
 
-postRoute.delete('/:id', authMiddleware, (req: RequestWithParams<BlogParams>, res: Response) => {
+postRoute.delete('/:id', authMiddleware, async (req: RequestWithParams<BlogParams>, res: Response) => {
     const id = req.params.id
-    const isDeleted = PostRepository.deletePostById(id)
-
-    if(isDeleted) {
-        res.sendStatus(204)
-    } else {
+    const status = await PostRepository.deletePost(id)
+    if (!status) {
         res.sendStatus(404)
-   }
+        return
+    }
+    return res.sendStatus(204)
 })
 
 //postRoute.delete('/:id', authMiddleware, postValidation(), (req: RequestWithParams<PostParams>, res: Response) => {
