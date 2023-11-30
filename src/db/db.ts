@@ -6,7 +6,7 @@ dotenv.config()
 
 export const port = 80;
 
-const mongoUrl = process.env.MONGO_URL
+const mongoUrl = process.env.MONGO_URL as string
 
 console.log(mongoUrl)
 
