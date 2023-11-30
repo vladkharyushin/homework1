@@ -14,16 +14,23 @@ blogRoute.get('/', async (req: Request, res: Response) => {
     res.status(200).send(blogs)
 })
 
-blogRoute.get('/:id', async (req: RequestWithParams<BlogParams>, res: Response) => {
-    const id = req.params.id
-    if(!id || !ObjectId.isValid(id)){
-        res.sendStatus(404)
+blogRoute.get('/:id', async (req: RequestWithParams<Params>, res: Response) => {
+    try {
+        const id = req.params.id
+        if(!id || !ObjectId.isValid(id)){
+            res.sendStatus(404)
+            return
+        }
+        const blog = await BlogRepository.getBlogById(id)
+        if(!blog){
+            res.sendStatus(404)
+            return
+        }
+        res.status(200).send(blog)
+    } catch (e) {
+        console.log(e)
     }
-    const blog = await BlogRepository.getBlogById(id)
-    if(!blog){
-        res.sendStatus(404)
-    }
-    res.status(200).send(blog)
+
 })
 
 blogRoute.post('/', authMiddleware, blogPostValidation(), async (req: RequestWithBody<BlogParams>, res: Response) => {
@@ -35,7 +42,7 @@ blogRoute.post('/', authMiddleware, blogPostValidation(), async (req: RequestWit
 blogRoute.put('/:id', authMiddleware, blogPostValidation(), async (req: RequestWithBodyAndParams<Params, BlogParams>, res: Response,) => {
     const id = req.params.id
     if(!id || !ObjectId.isValid(id)){
-        res.sendStatus(404)
+        return res.sendStatus(404)
     }
     const blog: OutputBlogType | null= await BlogRepository.getBlogById(id)
         const {name, description, websiteUrl} = req.body
@@ -54,7 +61,7 @@ blogRoute.put('/:id', authMiddleware, blogPostValidation(), async (req: RequestW
 blogRoute.delete('/:id', authMiddleware, async (req: RequestWithParams<Params>, res: Response) => {
     const id = req.params.id;
     if(!id || !ObjectId.isValid(id)){
-        res.sendStatus(404)
+        return res.sendStatus(404)
     }
     const status = await BlogRepository.deleteBlogById(id);
 

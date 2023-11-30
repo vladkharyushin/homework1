@@ -19,10 +19,12 @@ postRoute.get('/:id', async (req: RequestWithParams<Params>, res: Response) => {
     const id = req.params.id
     if(!id || !ObjectId.isValid(id)){
         res.sendStatus(404)
+        return
     }
     const post = await PostRepository.getPostById(id)
     if(!post){
         res.sendStatus(404)
+        return
     }
     res.status(200).send(post)
 })
@@ -44,7 +46,7 @@ postRoute.post('/', authMiddleware, postValidation(), async (req: RequestWithBod
 postRoute.put('/:id', authMiddleware, postValidation(), async (req: RequestWithBodyAndParams<Params, PostParams>, res: Response) => {
     const id = req.params.id
     if(!id || !ObjectId.isValid(id)){
-        res.sendStatus(404)
+        return res.sendStatus(404)
     }
     const post: OutputPostType | null = await PostRepository.getPostById(id)
     const { title, shortDescription, content, blogId } = req.body
@@ -66,7 +68,7 @@ postRoute.put('/:id', authMiddleware, postValidation(), async (req: RequestWithB
 postRoute.delete('/:id', authMiddleware, async (req: RequestWithParams<Params>, res: Response) => {
     const id = req.params.id
     if(!id || !ObjectId.isValid(id)){
-        res.sendStatus(404)
+        return res.sendStatus(404)
     }
     const status = await PostRepository.deletePost(id)
     if (!status) {
