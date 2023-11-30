@@ -5,7 +5,6 @@ import {Params, RequestWithBody, RequestWithBodyAndParams, RequestWithParams} fr
 import {PostParams} from "../types/post/input";
 import {BlogRepository} from "../repositories/blog-repository";
 import {postValidation} from "../validators/posts-validator";
-import {BlogParams} from "../types/blog/input";
 import {OutputPostType} from "../types/post/output";
 
 export const postRoute = Router({})
@@ -57,10 +56,10 @@ postRoute.put('/:id', authMiddleware, postValidation(), async (req: RequestWithB
     return res.sendStatus(204)
 })
 
-postRoute.delete('/:id', authMiddleware, async (req: RequestWithParams<BlogParams>, res: Response) => {
+postRoute.delete('/:id', authMiddleware, async (req: RequestWithParams<Params>, res: Response) => {
     const id = req.params.id
     const status = await PostRepository.deletePost(id)
-    if (status == false) {
+    if (!status) {
         res.sendStatus(404)
         return
     }
