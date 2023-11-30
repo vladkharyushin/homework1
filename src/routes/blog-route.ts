@@ -15,6 +15,9 @@ blogRoute.get('/', async (req: Request, res: Response) => {
 
 blogRoute.get('/:id', async (req: RequestWithParams<BlogParams>, res: Response) => {
     const id = req.params.id
+    if(!id){
+        res.sendStatus(404)
+    }
     const blog = await BlogRepository.getBlogById(id)
     if(!blog){
         res.sendStatus(404)
