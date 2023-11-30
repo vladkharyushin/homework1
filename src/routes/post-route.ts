@@ -60,7 +60,7 @@ postRoute.put('/:id', authMiddleware, postValidation(), async (req: RequestWithB
 postRoute.delete('/:id', authMiddleware, async (req: RequestWithParams<BlogParams>, res: Response) => {
     const id = req.params.id
     const status = await PostRepository.deletePost(id)
-    if (!status) {
+    if (status == false) {
         res.sendStatus(404)
         return
     }
