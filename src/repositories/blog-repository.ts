@@ -41,7 +41,7 @@ export class BlogRepository {
                 $set: {
                     name: updateData.name,
                     description: updateData.description,
-                    webisteUrl: updateData.websiteUrl,
+                    websiteUrl: updateData.websiteUrl,
                 },
             }
         )

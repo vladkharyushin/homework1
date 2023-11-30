@@ -50,7 +50,7 @@ export class PostRepository {
                     blogId: updateData.blogId,
                 },
             }
-        );
+        )
 
         return !!result.matchedCount;
     }
@@ -58,9 +58,8 @@ export class PostRepository {
     static async deletePost(id: string): Promise<boolean> {
         const result = await postCollection.deleteOne({ _id: new ObjectId(id) });
 
-        return !!result.deletedCount;
+        return !!result.deletedCount
     }
-
 }
 
 //    static deletePostById(id: string) {

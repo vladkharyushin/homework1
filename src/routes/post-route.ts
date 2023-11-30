@@ -40,8 +40,8 @@ postRoute.post('/', authMiddleware, postValidation(), async (req: RequestWithBod
 
 postRoute.put('/:id', authMiddleware, postValidation(), async (req: RequestWithBodyAndParams<Params, PostParams>, res: Response) => {
     const id = req.params.id
-    let post: OutputPostType | null = await PostRepository.getPostById(id)
-    let { title, shortDescription, content, blogId } = req.body
+    const post: OutputPostType | null = await PostRepository.getPostById(id)
+    const { title, shortDescription, content, blogId } = req.body
 
     if (!post) {
         res.sendStatus(404)
