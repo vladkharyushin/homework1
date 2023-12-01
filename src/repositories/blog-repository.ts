@@ -3,9 +3,16 @@ import {blogCollection} from "../db/db";
 import {ObjectId} from "mongodb";
 import {blogMapper} from "../types/blog/blog-mapper";
 import {InputBlogType, UpdateBlogData} from "../types/blog/input";
+import {SortDataType} from "../types/common";
 
 export class BlogRepository {
-    static async getAllBlogs() {
+    static async getAllBlogs(sortData: SortDataType) {
+        const searchNameTerm = sortData.searchNameTerm ?? null
+        const sortBy = sortData.sortBy ?? 'cratedAt'
+        const sortDirection = sortData.sortDirection ?? 'desc'
+        const pageNumber = sortData.pageNumber ?? 1
+        const pageSize = sortData.pageSize ?? 10
+
         const blogs = await blogCollection.find({}).toArray()
         return blogs.map(blogMapper)
     }
@@ -17,10 +24,6 @@ export class BlogRepository {
         }
         return blogMapper(blog)
     }
-
-//    static createBlog(createBlog: BlogType) {
-//        db.blogs.push(createBlog)
-//    }
 
     static async createBlog(newBlog: InputBlogType): Promise<BlogType> {
         const createdBlog: BlogType = {
@@ -54,13 +57,3 @@ export class BlogRepository {
         return !!result.deletedCount
  }
 }
-
-//        const blogIndex = db.blogs.findIndex(b => b.id === id)
-//        const blog = db.blogs.find(b => b.id === id)
-//
-//       if(blog) {
-//            db.blogs.splice(blogIndex, 1)
-//            return true
-//            } else {
-//            return false
-//        }
