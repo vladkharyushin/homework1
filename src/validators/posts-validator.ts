@@ -1,5 +1,4 @@
 import {body} from "express-validator";
-import {BlogRepository} from "../repositories/blog-repository";
 import {inputModelValidation} from "../middlewares/inputModel/input-model-validation";
 import {QueryBlogRepository} from "../repositories/query-repository/query-blog-repository";
 

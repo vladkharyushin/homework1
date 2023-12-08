@@ -1,4 +1,4 @@
-import {Router, Request, Response} from "express";
+import {Router, Response} from "express";
 import {PostRepository} from "../repositories/post-repository";
 import {authMiddleware} from "../middlewares/auth/auth-middleware";
 import {Params, RequestWithBody, RequestWithBodyAndParams, RequestWithParams, RequestWithQuery, SortDataType}from "../types/common";

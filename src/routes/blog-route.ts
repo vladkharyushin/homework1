@@ -41,9 +41,7 @@ blogRoute.get('/:id', async (req: RequestWithParams<Params>, res: Response) => {
         res.status(200).send(blog)
 })
 
-blogRoute.get(
-    '/:blogId/posts',
-    async (req: RequestWithQuery<SortDataType>, res: Response) => {
+blogRoute.get('/:blogId/posts', async (req: RequestWithQuery<SortDataType>, res: Response) => {
         const sortData = {
             sortBy: req.query.sortBy,
             sortDirection: req.query.sortDirection,
@@ -66,6 +64,7 @@ blogRoute.post('/:blogId/posts', authMiddleware, postValidation(), async (
     req: RequestWithBodyAndParams<BlogIdParams, CreatePostToBlogType>,
     res: Response) => {
     const id = req.params.blogId
+    console.log("controller")
     const {title, shortDescription, content} = req.body
     const blog = await QueryBlogRepository.getBlogById(id)
 
