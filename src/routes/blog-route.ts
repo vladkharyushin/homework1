@@ -10,6 +10,7 @@ import {BlogService} from "../domain/blog-service";
 import {QueryBlogRepository} from "../repositories/query-repository/query-blog-repository";
 import {postValidation} from "../validators/posts-validator";
 import {CreatePostToBlogType} from "../types/post/output";
+import {QueryPostRepository} from "../repositories/query-repository/query-post-repository";
 
 export const blogRoute = Router({})
 
@@ -40,13 +41,28 @@ blogRoute.get('/:id', async (req: RequestWithParams<Params>, res: Response) => {
         res.status(200).send(blog)
 })
 
+blogRoute.get(
+    "/:blogId/posts",
+    async (req: RequestWithQuery<SortDataType>, res: Response) => {
+        const sortData = {
+            sortBy: req.query.sortBy,
+            sortDirection: req.query.sortDirection,
+            pageNumber: req.query.pageNumber,
+            pageSize: req.query.pageSize,
+        };
+        const blogId = await QueryPostRepository.getAllPosts(sortData);
+
+        return res.send(blogId);
+    }
+);
+
 blogRoute.post('/', authMiddleware, blogPostValidation(), async (req: RequestWithBody<BlogParams>, res: Response) => {
     const blog = await BlogService.createBlog(req.body)
 
     return res.status(201).send(blog)
 })
 
-blogRoute.post('/:blogId/posts', authMiddleware, blogPostValidation(), async (
+blogRoute.post('/:blogId/posts', authMiddleware, postValidation(), async (
     req: RequestWithBodyAndParams<BlogIdParams, CreatePostToBlogType>,
     res: Response) => {
     const id = req.params.blogId
