@@ -1,4 +1,4 @@
-import {Router, Request, Response} from "express";
+import {Router, Response} from "express";
 import {BlogRepository} from "../repositories/blog-repository";
 import {BlogIdParams, Params, RequestWithBody, RequestWithBodyAndParams, RequestWithParams, RequestWithQuery, SortDataType} from "../types/common";
 import {BlogParams, InputBlogType} from "../types/blog/input";
@@ -67,12 +67,12 @@ blogRoute.post('/:blogId/posts', authMiddleware, postValidation(), async (
     res: Response) => {
     const id = req.params.blogId
     const {title, shortDescription, content} = req.body
-//    const blog = await QueryBlogRepository.getBlogById(id)
+    const blog = await QueryBlogRepository.getBlogById(id)
 
-//    if (!blog){
-//        res.sendStatus(404)
-//        return
-//    }
+    if (!blog){
+        res.sendStatus(404)
+        return
+    }
 
     const createdPost = await BlogService.createPostToBlog(id, {
             title,
@@ -80,10 +80,10 @@ blogRoute.post('/:blogId/posts', authMiddleware, postValidation(), async (
             content,
         })
 
-//    if (!createdPost) {
-//        res.sendStatus(404)
-//        return
-//    }
+    if (!createdPost) {
+        res.sendStatus(404)
+        return
+    }
 
         return res.status(201).send(createdPost)
     })
