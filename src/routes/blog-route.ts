@@ -1,7 +1,7 @@
 import {Router, Request, Response} from "express";
 import {BlogRepository} from "../repositories/blog-repository";
 import {BlogIdParams, Params, RequestWithBody, RequestWithBodyAndParams, RequestWithParams, RequestWithQuery, SortDataType} from "../types/common";
-import {BlogParams} from "../types/blog/input";
+import {BlogParams, InputBlogType} from "../types/blog/input";
 import {authMiddleware} from "../middlewares/auth/auth-middleware";
 import {blogPostValidation} from "../validators/blogs-validator";
 import {OutputBlogType} from "../types/blog/output";
@@ -42,7 +42,7 @@ blogRoute.get('/:id', async (req: RequestWithParams<Params>, res: Response) => {
 })
 
 blogRoute.get(
-    "/:blogId/posts",
+    '/:blogId/posts',
     async (req: RequestWithQuery<SortDataType>, res: Response) => {
         const sortData = {
             sortBy: req.query.sortBy,
@@ -56,7 +56,7 @@ blogRoute.get(
     }
 );
 
-blogRoute.post('/', authMiddleware, blogPostValidation(), async (req: RequestWithBody<BlogParams>, res: Response) => {
+blogRoute.post('/', authMiddleware, blogPostValidation(), async (req: RequestWithBody<InputBlogType>, res: Response) => {
     const blog = await BlogService.createBlog(req.body)
 
     return res.status(201).send(blog)
