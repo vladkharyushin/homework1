@@ -46,17 +46,17 @@ blogRoute.post('/', authMiddleware, blogPostValidation(), async (req: RequestWit
     return res.status(201).send(blog)
 })
 
-blogRoute.post('/:blogId/posts', authMiddleware, postValidation(), async (
+blogRoute.post('/:blogId/posts', authMiddleware, blogPostValidation(), async (
     req: RequestWithBodyAndParams<BlogIdParams, CreatePostToBlogType>,
     res: Response) => {
     const id = req.params.blogId
     const {title, shortDescription, content} = req.body
-    const blog = await QueryBlogRepository.getBlogById(id)
+//    const blog = await QueryBlogRepository.getBlogById(id)
 
-    if (!blog){
-        res.sendStatus(404)
-        return
-    }
+//    if (!blog){
+//        res.sendStatus(404)
+//        return
+//    }
 
     const createdPost = await BlogService.createPostToBlog(id, {
             title,
@@ -64,10 +64,10 @@ blogRoute.post('/:blogId/posts', authMiddleware, postValidation(), async (
             content,
         })
 
-    if (!createdPost) {
-        res.sendStatus(404)
-        return
-    }
+//    if (!createdPost) {
+//        res.sendStatus(404)
+//        return
+//    }
 
         return res.status(201).send(createdPost)
     })

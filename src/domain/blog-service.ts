@@ -25,9 +25,9 @@ export class BlogService {
             blogId,
             blogName: blog.name,
         })
-        if(!post){
-            return null
-        }
+//        if(!post){
+//            return null
+//        }
         return post
     }
 }
