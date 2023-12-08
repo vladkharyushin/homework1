@@ -1,12 +1,13 @@
 import {body} from "express-validator";
 import {BlogRepository} from "../repositories/blog-repository";
 import {inputModelValidation} from "../middlewares/inputModel/input-model-validation";
+import {QueryBlogRepository} from "../repositories/query-repository/query-blog-repository";
 
 const blogIdValidation = body('blogId')
     .isString()
     .trim()
     .custom(async (value) => {
-    const blog = await BlogRepository.getBlogById(value)
+    const blog = await QueryBlogRepository.getBlogById(value)
     if(!blog) {
         throw new Error('Incorrect blogId')
     }

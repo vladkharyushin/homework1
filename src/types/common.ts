@@ -25,5 +25,10 @@ export type SortDataType = {
     sortBy?: string,
     sortDirection?: 'asc' | 'desc',
     pageNumber?: number,
-    pageSize?: number
+    pageSize?: number,
+    blogId?: string
+}
+
+export type BlogIdParams = {
+    blogId: string
 }
