@@ -3,7 +3,7 @@ import {PostRepository} from "../repositories/post-repository";
 import {authMiddleware} from "../middlewares/auth/auth-middleware";
 import {Params, RequestWithBody, RequestWithBodyAndParams, RequestWithParams, RequestWithQuery, SortDataType}from "../types/common";
 import {PostParams} from "../types/post/input";
-import {createPostValidation, postValidation} from "../validators/posts-validator";
+import {postValidation} from "../validators/posts-validator";
 import {OutputPostType} from "../types/post/output";
 import {ObjectId} from "mongodb";
 import {QueryPostRepository} from "../repositories/query-repository/query-post-repository";

@@ -20,6 +20,8 @@ export type RequestWithBodyAndParams<P, B> = Request<P, {}, B, {}>
 
 export type RequestWithQuery<Q> = Request<{}, {}, {}, Q>
 
+export type RequestTypeWithQueryBlogId<Q, P> = Request<P, {}, {}, Q>
+
 export type SortDataType = {
     searchNameTerm?: string,
     sortBy?: string,
