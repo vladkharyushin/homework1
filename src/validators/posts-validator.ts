@@ -1,6 +1,7 @@
 import {body , param} from "express-validator";
 import {inputModelValidation} from "../middlewares/inputModel/input-model-validation";
 import {QueryBlogRepository} from "../repositories/query-repository/query-blog-repository";
+import {notFoundValidation} from "./not-found-validator";
 
 const blogIdBodyValidation = body('blogId')
     .isString()
@@ -49,7 +50,8 @@ export const postValidation = () => [
     titleValidation,
     shortDescriptionValidation,
     contentValidation,
-    inputModelValidation
+    inputModelValidation,
+    notFoundValidation
 ]
 
 export const createPostValidation = () => [
@@ -58,4 +60,5 @@ export const createPostValidation = () => [
     shortDescriptionValidation,
     contentValidation,
     inputModelValidation,
+    notFoundValidation
 ];

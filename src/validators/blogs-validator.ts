@@ -1,5 +1,7 @@
 import {body} from "express-validator";
 import {inputModelValidation} from "../middlewares/inputModel/input-model-validation";
+import {blogIdParamsValidation} from "./posts-validator";
+import {notFoundValidation} from "./not-found-validator";
 
 const nameValidation = body('name')
     .exists()
@@ -28,3 +30,8 @@ export const blogPostValidation = () => [
     websiteUrlValidation,
     inputModelValidation
 ]
+
+export const allPostsForBlogByIdValidation = () => [
+    blogIdParamsValidation,
+    notFoundValidation,
+];
