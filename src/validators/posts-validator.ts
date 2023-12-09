@@ -5,12 +5,12 @@ import {QueryBlogRepository} from "../repositories/query-repository/query-blog-r
 const blogIdBodyValidation = body('blogId')
     .isString()
     .trim()
-    .custom(async (value, meta) => {
+    .custom(async (value) => {
     const blog = await QueryBlogRepository.getBlogById(value)
     if(!blog) {
         throw new Error('Incorrect blogId')
     }
-        meta.req.blog = blog
+        return true
 })
     .withMessage('Incorrect blogId')
 
@@ -45,7 +45,7 @@ const contentValidation = body("content")
     .withMessage('Incorrect content')
 
 export const postValidation = () => [
-    blogIdParamsValidation,
+    blogIdBodyValidation,
     titleValidation,
     shortDescriptionValidation,
     contentValidation,
