@@ -3,7 +3,7 @@ import {PostRepository} from "../repositories/post-repository";
 import {authMiddleware} from "../middlewares/auth/auth-middleware";
 import {Params, RequestWithBody, RequestWithBodyAndParams, RequestWithParams, RequestWithQuery, SortDataType}from "../types/common";
 import {PostParams} from "../types/post/input";
-import {postValidation} from "../validators/posts-validator";
+import {createPostValidation, postValidation} from "../validators/posts-validator";
 import {OutputPostType} from "../types/post/output";
 import {ObjectId} from "mongodb";
 import {QueryPostRepository} from "../repositories/query-repository/query-post-repository";
@@ -37,7 +37,7 @@ postRoute.get('/:id', async (req: RequestWithParams<Params>, res: Response) => {
     res.status(200).send(post)
 })
 
-postRoute.post('/', authMiddleware, postValidation(), async (req: RequestWithBody<PostParams>, res: Response) => {
+postRoute.post('/', authMiddleware, createPostValidation(), async (req: RequestWithBody<PostParams>, res: Response) => {
         const blog = await QueryBlogRepository.getBlogById(req.body.blogId)
         if (!blog) {
             res.sendStatus(404)
