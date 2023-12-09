@@ -6,12 +6,12 @@ import {notFoundValidation} from "./not-found-validator";
 const blogIdBodyValidation = body('blogId')
     .isString()
     .trim()
-    .custom(async (value, meta) => {
+    .custom(async (value) => {
     const blog = await QueryBlogRepository.getBlogById(value)
     if(!blog) {
         throw new Error('Incorrect blogId')
     }
-        meta.req.blog = blog
+        return true
 })
     .withMessage('Incorrect blogId')
 
