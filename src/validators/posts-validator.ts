@@ -1,18 +1,30 @@
-import {body} from "express-validator";
+import {body , param} from "express-validator";
 import {inputModelValidation} from "../middlewares/inputModel/input-model-validation";
 import {QueryBlogRepository} from "../repositories/query-repository/query-blog-repository";
 
-const blogIdValidation = body('blogId')
+const blogIdBodyValidation = body('blogId')
     .isString()
     .trim()
-    .custom(async (value) => {
+    .custom(async (value, meta) => {
     const blog = await QueryBlogRepository.getBlogById(value)
     if(!blog) {
         throw new Error('Incorrect blogId')
     }
-    return true
+        meta.req.blog = blog
 })
     .withMessage('Incorrect blogId')
+
+export const blogIdParamsValidation = param('blogId')
+    .isString()
+    .trim()
+    .custom(async (value) => {
+        const blog = await QueryBlogRepository.getBlogById(value);
+
+        if (!blog) {
+            throw new Error('Incorrect blogId!');
+        }
+    })
+    .withMessage('Incorrect blogId!');
 
 const titleValidation = body("title")
     .isString()
@@ -33,7 +45,7 @@ const contentValidation = body("content")
     .withMessage('Incorrect content')
 
 export const postValidation = () => [
-    blogIdValidation,
+    blogIdParamsValidation,
     titleValidation,
     shortDescriptionValidation,
     contentValidation,

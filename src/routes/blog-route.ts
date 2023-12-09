@@ -64,7 +64,6 @@ blogRoute.post('/:blogId/posts', authMiddleware, postValidation(), async (
     req: RequestWithBodyAndParams<BlogIdParams, CreatePostToBlogType>,
     res: Response) => {
     const id = req.params.blogId
-    console.log("controller")
     const {title, shortDescription, content} = req.body
     const blog = await QueryBlogRepository.getBlogById(id)
 
