@@ -46,12 +46,11 @@ const contentValidation = body("content")
     .withMessage('Incorrect content')
 
 export const postValidation = () => [
-    blogIdParamsValidation,
+    blogIdBodyValidation,
     titleValidation,
     shortDescriptionValidation,
     contentValidation,
-    inputModelValidation,
-    notFoundValidation
+    inputModelValidation
 ]
 
 export const createPostValidation = () => [
@@ -59,6 +58,5 @@ export const createPostValidation = () => [
     titleValidation,
     shortDescriptionValidation,
     contentValidation,
-    inputModelValidation,
-    notFoundValidation
+    inputModelValidation
 ];

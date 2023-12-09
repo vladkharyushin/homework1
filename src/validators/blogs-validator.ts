@@ -31,7 +31,7 @@ export const blogPostValidation = () => [
     inputModelValidation
 ]
 
-export const allPostsForBlogByIdValidation = () => [
-    blogIdParamsValidation,
-    notFoundValidation,
-];
+//export const allPostsForBlogByIdValidation = () => [
+//    blogIdParamsValidation,
+//    notFoundValidation,
+//];
