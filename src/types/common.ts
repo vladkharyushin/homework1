@@ -1,4 +1,5 @@
 import {Request} from "express";
+import {BlogType} from "./blog/output";
 
 export type ErrorType = {
     errorsMessages: ErrorMessageType[]
@@ -21,6 +22,8 @@ export type RequestWithBodyAndParams<P, B> = Request<P, {}, B, {}>
 export type RequestWithQuery<Q> = Request<{}, {}, {}, Q>
 
 export type RequestTypeWithQueryBlogId<Q, P> = Request<P, {}, {}, Q>
+
+export type RequestWithBodyAndBlog<B> = Request<{}, {}, B, {}, BlogType>
 
 export type SortDataType = {
     searchNameTerm?: string,

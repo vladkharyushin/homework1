@@ -17,7 +17,7 @@ import {OutputBlogType} from "../types/blog/output";
 import {ObjectId} from "mongodb";
 import {BlogService} from "../domain/blog-service";
 import {QueryBlogRepository} from "../repositories/query-repository/query-blog-repository";
-import {postValidation} from "../validators/posts-validator";
+import {postBlogIdValidation, postValidation} from "../validators/posts-validator";
 import {CreatePostToBlogType} from "../types/post/output";
 import {QueryPostRepository} from "../repositories/query-repository/query-post-repository";
 
@@ -62,7 +62,7 @@ blogRoute.get('/:blogId/posts', allPostsForBlogByIdValidation(), async (req: Req
         ...sortData,
         blogId,
     })
-    return res.status(200).send(foundPosts)
+    res.status(200).send(foundPosts)
     })
 
 blogRoute.post('/', authMiddleware, blogPostValidation(), async (req: RequestWithBody<InputBlogType>, res: Response) => {
@@ -71,7 +71,7 @@ blogRoute.post('/', authMiddleware, blogPostValidation(), async (req: RequestWit
     return res.status(201).send(blog)
 })
 
-blogRoute.post('/:blogId/posts', authMiddleware, postValidation(), async (
+blogRoute.post('/:blogId/posts', authMiddleware, postBlogIdValidation(), async (
     req: RequestWithBodyAndParams<BlogIdParams, CreatePostToBlogType>,
     res: Response) => {
     const id = req.params.blogId

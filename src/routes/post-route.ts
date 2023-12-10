@@ -1,7 +1,15 @@
 import {Router, Response} from "express";
 import {PostRepository} from "../repositories/post-repository";
 import {authMiddleware} from "../middlewares/auth/auth-middleware";
-import {Params, RequestWithBody, RequestWithBodyAndParams, RequestWithParams, RequestWithQuery, SortDataType}from "../types/common";
+import {
+    Params,
+    RequestWithBody,
+    RequestWithBodyAndBlog,
+    RequestWithBodyAndParams,
+    RequestWithParams,
+    RequestWithQuery,
+    SortDataType
+} from "../types/common";
 import {PostParams} from "../types/post/input";
 import {postValidation} from "../validators/posts-validator";
 import {OutputPostType} from "../types/post/output";
@@ -37,7 +45,7 @@ postRoute.get('/:id', async (req: RequestWithParams<Params>, res: Response) => {
     res.status(200).send(post)
 })
 
-postRoute.post('/', authMiddleware, postValidation(), async (req: RequestWithBody<PostParams>, res: Response) => {
+postRoute.post('/', authMiddleware, postValidation(), async (req: RequestWithBodyAndBlog<OutputPostType>, res: Response) => {
         const blog = await QueryBlogRepository.getBlogById(req.body.blogId)
         if (!blog) {
             res.sendStatus(404)

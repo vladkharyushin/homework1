@@ -8,7 +8,7 @@ export const notFoundValidation = (
 ) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-        // const err = errors.array({ onlyFirstError: true });
+        const err = errors.array({ onlyFirstError: true });
 
         return res.sendStatus(404);
     }
