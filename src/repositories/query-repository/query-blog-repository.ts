@@ -7,7 +7,7 @@ import {ObjectId} from "mongodb";
 export class QueryBlogRepository {
     static async getAllBlogs(sortData: SortDataType) {
         const searchNameTerm = sortData.searchNameTerm ?? null
-        const sortBy = sortData.sortBy ?? 'cratedAt'
+        const sortBy = sortData.sortBy ?? 'createdAt'
         const sortDirection = sortData.sortDirection ?? 'desc'
         const pageNumber = sortData.pageNumber ?? 1
         const pageSize = sortData.pageSize ?? 10
