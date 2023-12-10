@@ -12,12 +12,15 @@ import {
 } from "../types/common";
 import {BlogParams, InputBlogType} from "../types/blog/input";
 import {authMiddleware} from "../middlewares/auth/auth-middleware";
-import {allPostsForBlogByIdValidation, blogPostValidation} from "../validators/blogs-validator";
+import {
+    allPostsByBlogIdValidation,
+    blogPostValidation
+} from "../validators/blogs-validator";
 import {OutputBlogType} from "../types/blog/output";
 import {ObjectId} from "mongodb";
 import {BlogService} from "../domain/blog-service";
 import {QueryBlogRepository} from "../repositories/query-repository/query-blog-repository";
-import {postBlogIdValidation, postValidation} from "../validators/posts-validator";
+import {postBlogIdValidation} from "../validators/posts-validator";
 import {CreatePostToBlogType} from "../types/post/output";
 import {QueryPostRepository} from "../repositories/query-repository/query-post-repository";
 
@@ -50,7 +53,7 @@ blogRoute.get('/:id', async (req: RequestWithParams<Params>, res: Response) => {
         res.status(200).send(blog)
 })
 
-blogRoute.get('/:blogId/posts', allPostsForBlogByIdValidation(), async (req: RequestTypeWithQueryBlogId<SortDataType, BlogIdParams>, res: Response) => {
+blogRoute.get('/:blogId/posts', allPostsByBlogIdValidation(), async (req: RequestTypeWithQueryBlogId<SortDataType, BlogIdParams>, res: Response) => {
         const sortData = {
             sortBy: req.query.sortBy,
             sortDirection: req.query.sortDirection,

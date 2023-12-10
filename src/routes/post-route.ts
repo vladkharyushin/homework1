@@ -3,7 +3,6 @@ import {PostRepository} from "../repositories/post-repository";
 import {authMiddleware} from "../middlewares/auth/auth-middleware";
 import {
     Params,
-    RequestWithBody,
     RequestWithBodyAndBlog,
     RequestWithBodyAndParams,
     RequestWithParams,
