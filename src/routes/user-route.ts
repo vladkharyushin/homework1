@@ -36,7 +36,7 @@ userRoute.post('/', authLoginValidation(), userValidation(), async (req: Request
     return res.status(201).send(user)
 })
 
-userRoute.delete('/:id', authLoginValidation(), userValidation(), async (req: RequestWithParams<Params>, res: Response) => {
+userRoute.delete('/:id', authLoginValidation(), async (req: RequestWithParams<Params>, res: Response) => {
     const id = req.params.id
     if (!id || ObjectId.isValid(id)){
         return res.sendStatus(404)
