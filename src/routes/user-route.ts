@@ -37,7 +37,7 @@ userRoute.post('/', authMiddleware, userValidation(), async (req: RequestWithBod
 userRoute.delete('/:id', authMiddleware, async (req: RequestWithParams<Params>, res: Response) => {
     const id = req.params.id
 
-    if (!id || ObjectId.isValid(id)){
+    if (!ObjectId.isValid(id)){
         return res.sendStatus(404)
     }
     const status = await UserRepository.deleteUserById(id)
