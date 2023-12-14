@@ -128,8 +128,8 @@ videoRoute.put('/videos/:id', (req: RequestWithBodyAndParams<Params, UpdateVideo
         res.status(400).send(error)
         return
     }
-    const videoIndex = db.videos.findIndex(v => v.id === id)
-    const video = db.videos.find(v => v.id === id)
+    const videoIndex = db.videos.findIndex((v: VideoType) => v.id === id)
+    const video = db.videos.find((v: VideoType) => v.id === id)
 
     if (!video) {
         res.sendStatus(404)

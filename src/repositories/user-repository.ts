@@ -10,15 +10,15 @@ export class UserRepository {
             email: newUser.email,
             createdAt: new Date().toISOString()
         }
+
         const result = await userCollection.insertOne({...createdUser})
-        createdUser.id = result.insertedId.toString()
+
         return {
-            id: createdUser.id,
-            login: createdUser.login,
-            email: createdUser.email,
-            createdAt: createdUser.createdAt
+            ...createdUser,
+            id: result.insertedId.toString(),
         }
     }
+
     static async deleteUserById(id: string): Promise<boolean> {
         const result = await userCollection.deleteOne({_id: new ObjectId(id)})
         return !!result.deletedCount

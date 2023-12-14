@@ -26,7 +26,7 @@ export class QueryUserRepository {
 
         if(searchEmailTerm){
             filterEmail = {
-                login: {
+                email: {
                     $regex: searchEmailTerm,
                     $options: 'i'
                 }
@@ -42,12 +42,12 @@ export class QueryUserRepository {
 
         const users = await userCollection
             .find(filter)
-            .sort({[sortBy]: sortDirection})
+            .sort(sortBy, sortDirection)
             .skip((+pageNumber - 1) * +pageSize)
             .limit(+pageSize)
             .toArray()
 
-        const totalCount = await userCollection.countDocuments()
+        const totalCount = await userCollection.countDocuments(filter)
 
         const pageCount = Math.ceil(totalCount / +pageSize)
 

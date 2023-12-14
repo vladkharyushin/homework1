@@ -21,14 +21,10 @@ userRoute.get('/', authMiddleware, async (req: RequestWithQuery<UserSortDataType
         searchLoginTerm: req.query.searchLoginTerm,
         searchEmailTerm: req.query.searchEmailTerm
     }
+
     const users = await QueryUserRepository.getAllUsers(sortData)
 
-    if(!users){
-        res.sendStatus(404)
-        return
-    }
     res.status(200).send(users)
-    return
 })
 
 userRoute.post('/', authMiddleware, userValidation(), async (req: RequestWithBody<InputUserType>, res: Response) => {

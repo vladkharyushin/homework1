@@ -1,4 +1,4 @@
-/*import {VideoType} from "../types/video/output";
+import {VideoType} from "../types/video/output";
 import {BlogType} from "../types/blog/output";
 import {PostType} from "../types/post/output";
 
@@ -27,7 +27,7 @@ export let db: DBType = {
         description: "string",
         websiteUrl: "string",
         createdAt: "string",
-        isMembership: "boolean"
+        isMembership: true
     }],
     posts: [{
         id: "string",
@@ -39,4 +39,4 @@ export let db: DBType = {
         createdAt: "string",
     }]
 }
-*/
+
