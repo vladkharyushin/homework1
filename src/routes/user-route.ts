@@ -31,6 +31,7 @@ userRoute.get('/', authLoginValidation(), userValidation(), async (req: RequestW
 })
 
 userRoute.post('/', authLoginValidation(), userValidation(), async (req: RequestWithBody<InputUserType>, res: Response) => {
+
     const user = await UserService.createUser(req.body)
 
     return res.status(201).send(user)
