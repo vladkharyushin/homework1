@@ -8,6 +8,7 @@ import {InputUserType} from "../types/user/input";
 import {UserService} from "../domain/user-service";
 import {ObjectId} from "mongodb";
 import {UserRepository} from "../repositories/user-repository";
+import {authMiddleware} from "../middlewares/auth/auth-middleware";
 
 export const userRoute = Router({})
 
@@ -30,14 +31,14 @@ userRoute.get('/', authLoginValidation(), userValidation(), async (req: RequestW
     return
 })
 
-userRoute.post('/', authLoginValidation(), userValidation(), async (req: RequestWithBody<InputUserType>, res: Response) => {
+userRoute.post('/', authMiddleware, userValidation(), async (req: RequestWithBody<InputUserType>, res: Response) => {
 
     const user = await UserService.createUser(req.body)
 
     return res.status(201).send(user)
 })
 
-userRoute.delete('/:id', authLoginValidation(), async (req: RequestWithParams<Params>, res: Response) => {
+userRoute.delete('/:id', authMiddleware, async (req: RequestWithParams<Params>, res: Response) => {
     const id = req.params.id
     if (!id || ObjectId.isValid(id)){
         return res.sendStatus(404)
