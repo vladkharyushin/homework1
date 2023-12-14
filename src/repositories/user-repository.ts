@@ -12,7 +12,12 @@ export class UserRepository {
         }
         const result = await userCollection.insertOne({...createdUser})
         createdUser.id = result.insertedId.toString()
-        return  createdUser
+        return {
+            id: createdUser.id,
+            login: createdUser.login,
+            email: createdUser.email,
+            createdAt: createdUser.createdAt
+        }
     }
     static async deleteUserById(id: string): Promise<boolean> {
         const result = await userCollection.deleteOne({_id: new ObjectId(id)})
