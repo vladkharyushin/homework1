@@ -12,7 +12,7 @@ import {authMiddleware} from "../middlewares/auth/auth-middleware";
 
 export const userRoute = Router({})
 
-userRoute.get('/', authLoginValidation(), userValidation(), async (req: RequestWithQuery<UserSortDataType>, res: Response) => {
+userRoute.get('/', authMiddleware, async (req: RequestWithQuery<UserSortDataType>, res: Response) => {
     const sortData = {
         sortBy: req.query.sortBy,
         sortDirection: req.query.sortDirection,
