@@ -2,7 +2,6 @@ import {Router, Response} from "express";
 import {Params, RequestWithBody, RequestWithParams, RequestWithQuery} from "../types/common";
 import {UserSortDataType} from "../types/user/output";
 import {QueryUserRepository} from "../repositories/query-repository/query-user-repository";
-import {authLoginValidation} from "../validators/auth-validator";
 import {userValidation} from "../validators/user-validator";
 import {InputUserType} from "../types/user/input";
 import {UserService} from "../domain/user-service";
