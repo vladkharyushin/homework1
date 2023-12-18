@@ -22,7 +22,7 @@ const passwordValidation = body('password')
     .isLength({min: 6, max:20})
     .withMessage('Incorrect password')
 
-export const authLoginValidation = () =>
+export const authValidation = () =>
     [
         loginOrEmailValidation,
         passwordValidation,
