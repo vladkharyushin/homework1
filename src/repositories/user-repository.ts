@@ -1,13 +1,13 @@
 import {InputUserType} from "../types/user/input";
-import {OutputUserType, UserType} from "../types/user/output";
+import {OutputUserType} from "../types/user/output";
 import {userCollection} from "../db/db";
 import {ObjectId} from "mongodb";
 import bcrypt from "bcrypt";
 
 export class UserRepository {
     static async _generateHash(password: string, salt: string) {
-        const hash = await bcrypt.hash(password, salt);
-        return hash;
+        const hash = await bcrypt.hash(password, salt)
+        return hash
     }
 
     static async createUser(newUser: InputUserType): Promise<OutputUserType> {
@@ -25,7 +25,9 @@ export class UserRepository {
         const result = await userCollection.insertOne({...createdUser})
 
         return {
-            ...createdUser,
+            login: newUser.login,
+            email: newUser.email,
+            createdAt: createdUser.createdAt,
             id: result.insertedId.toString(),
         }
     }
@@ -34,7 +36,8 @@ export class UserRepository {
         const result = await userCollection.deleteOne({_id: new ObjectId(id)})
         return !!result.deletedCount
     }
-    static async findByLoginOrEmail(loginOrEmail: string): Promise< UserType | null> {
+
+    static async findByLoginOrEmail(loginOrEmail: string) {
        return userCollection.findOne({
             $or: [
                 {email: loginOrEmail},
@@ -42,13 +45,15 @@ export class UserRepository {
             ]
         })
     }
+
     static async checkCredentials(loginOrEmail: string, password: string): Promise<boolean> {
         const user = await UserRepository.findByLoginOrEmail(loginOrEmail);
 
         if (!user)
             return false
 
-        const passwordHash = await this._generateHash(password, user.passwordSalt);
+        const passwordHash = await this._generateHash(password, user.passwordSalt)
+
         if (user.passwordHash !== passwordHash) {
             return false
         }
