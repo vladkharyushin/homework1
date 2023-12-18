@@ -3,6 +3,7 @@ import {BlogType} from "../types/blog/output";
 import {PostType} from "../types/post/output";
 import dotenv from 'dotenv'
 import {UserType} from "../types/user/output";
+import {AuthType} from "../types/auth/input";
 dotenv.config()
 
 export const port = 80;
@@ -24,6 +25,8 @@ export const blogCollection = db.collection<BlogType>('blog')
 export const postCollection = db.collection<PostType>('post')
 
 export const userCollection = db.collection<UserType>('user')
+
+export const authCollection = db.collection<AuthType>('auth')
 
 export const runDb = async () => {
     try {
