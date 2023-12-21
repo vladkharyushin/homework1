@@ -69,7 +69,7 @@ blogRoute.get('/:blogId/posts', allPostsByBlogIdValidation(), async (req: Reques
     })
 
 blogRoute.post('/', authMiddleware, blogPostValidation(), async (req: RequestWithBody<InputBlogType>, res: Response) => {
-    const blog = await BlogService.createBlog(req.body)
+    const blog = await BlogRepository.createBlog(req.body)
 
     return res.status(201).send(blog)
 })
