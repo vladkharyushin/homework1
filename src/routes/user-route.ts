@@ -28,7 +28,7 @@ userRoute.get('/', authMiddleware, async (req: RequestWithQuery<UserSortDataType
 
 userRoute.post('/', authMiddleware, userValidation(), async (req: RequestWithBody<InputUserType>, res: Response) => {
 
-    const user = await UserService.createUser(req.body)
+    const user = await UserRepository.createUser(req.body)
 
     return res.status(201).send(user)
 })

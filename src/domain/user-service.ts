@@ -1,10 +1,56 @@
 import {InputUserType} from "../types/user/input";
-import {UserRepository} from "../repositories/user-repository";
 import {OutputUserType} from "../types/user/output";
+import bcrypt from "bcrypt";
+import {userCollection} from "../db/db";
 
 export class UserService{
+    static async _generateHash(password: string, salt: string) {
+        const hash = await bcrypt.hash(password, salt)
+        return hash
+    }
+
     static async createUser(newUser: InputUserType): Promise<OutputUserType> {
-        const user = await UserRepository.createUser(newUser)
-        return user
+        const passwordSalt = await bcrypt.genSalt(10)
+        const passwordHash = await this._generateHash(newUser.password, passwordSalt)
+
+        const createdUser = {
+            login: newUser.login,
+            email: newUser.email,
+            createdAt: new Date().toISOString(),
+            passwordHash,
+            passwordSalt
+        }
+
+        const result = await userCollection.insertOne({...createdUser})
+
+        return {
+            login: newUser.login,
+            email: newUser.email,
+            createdAt: createdUser.createdAt,
+            id: result.insertedId.toString(),
+        }
+    }
+
+    static async findByLoginOrEmail(loginOrEmail: string) {
+        return userCollection.findOne({
+            $or: [
+                {email: loginOrEmail},
+                {login: loginOrEmail}
+            ]
+        })
+    }
+
+    static async checkCredentials(loginOrEmail: string, password: string): Promise<boolean> {
+        const user = await UserService.findByLoginOrEmail(loginOrEmail);
+
+        if (!user)
+            return false
+
+        const passwordHash = await this._generateHash(password, user.passwordSalt)
+
+        if (user.passwordHash !== passwordHash) {
+            return false
+        }
+        return true
     }
 }
