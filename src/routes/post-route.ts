@@ -15,7 +15,6 @@ import {OutputPostType} from "../types/post/output";
 import {ObjectId} from "mongodb";
 import {QueryPostRepository} from "../repositories/query-repository/query-post-repository";
 import {QueryBlogRepository} from "../repositories/query-repository/query-blog-repository";
-import {PostService} from "../domain/post-service";
 
 export const postRoute = Router({})
 
@@ -50,7 +49,7 @@ postRoute.post('/', authMiddleware, postValidation(), async (req: RequestWithBod
             res.sendStatus(404)
             return
         }
-        const post = await PostService.createNewPost({
+        const post = await PostRepository.createNewPost({
             ...req.body,
             blogName: blog.name,
         })
