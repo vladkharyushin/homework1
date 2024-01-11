@@ -4,7 +4,6 @@ import {UserSortDataType} from "../types/user/output";
 import {QueryUserRepository} from "../repositories/query-repository/query-user-repository";
 import {userValidation} from "../validators/user-validator";
 import {InputUserType} from "../types/user/input";
-import {UserService} from "../domain/user-service";
 import {ObjectId} from "mongodb";
 import {UserRepository} from "../repositories/user-repository";
 import {authMiddleware} from "../middlewares/auth/auth-middleware";

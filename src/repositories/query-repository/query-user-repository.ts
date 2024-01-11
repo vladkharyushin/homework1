@@ -1,6 +1,7 @@
-import {UserSortDataType} from "../../types/user/output";
+import {OutputUserType, UserSortDataType} from "../../types/user/output";
 import {userCollection} from "../../db/db";
 import {userMapper} from "../../types/user/user-mapper";
+import {ObjectId} from "mongodb";
 
 export class QueryUserRepository {
     static async getAllUsers(sortData: UserSortDataType) {
@@ -58,5 +59,15 @@ export class QueryUserRepository {
             totalCount: +totalCount,
             items: users.map(userMapper)
         }
+    }
+    static async getUserById(id: string): Promise<OutputUserType | null> {
+        if (!ObjectId.isValid(id))
+            return null
+
+        const user = await userCollection.findOne({_id: new ObjectId(id)})
+        if (!user) {
+            return null
+        }
+        return userMapper(user)
     }
 }
