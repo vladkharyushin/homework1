@@ -1,14 +1,14 @@
 import {MongoClient} from "mongodb";
 import {BlogType} from "../types/blog/output";
 import {PostType} from "../types/post/output";
-import dotenv from 'dotenv'
 import {UserType} from "../types/user/output";
 import {AuthType} from "../types/auth/input";
-dotenv.config()
+import {CommentType} from "../types/comment/output";
+import {mongoUrl} from "../config";
 
 export const port = 80;
 
-const mongoUrl = process.env.MONGO_URL
+//const mongoUrl = process.env.MONGO_URL
 
 console.log(mongoUrl)
 
@@ -27,6 +27,8 @@ export const postCollection = db.collection<PostType>('post')
 export const userCollection = db.collection<UserType>('user')
 
 export const authCollection = db.collection<AuthType>('auth')
+
+export const commentCollection = db.collection<CommentType>("comments")
 
 export const runDb = async () => {
     try {

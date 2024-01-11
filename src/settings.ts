@@ -5,6 +5,7 @@ import {videoRoute} from "./routes/video-route";
 import {testingRoute} from "./routes/testing-route";
 import {userRoute} from "./routes/user-route";
 import {authRoute} from "./routes/auth-route";
+import {commentRoute} from "./routes/comment-route";
 
 export const app = express()
 
@@ -16,3 +17,4 @@ app.use('/blogs', blogRoute)
 app.use('/posts', postRoute)
 app.use('/users', userRoute)
 app.use('/auth', authRoute)
+app.use("/comments", commentRoute)
