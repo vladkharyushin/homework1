@@ -23,6 +23,8 @@ export type RequestWithQuery<Q> = Request<{}, {}, {}, Q>
 
 export type RequestTypeWithQueryBlogId<Q, P> = Request<P, {}, {}, Q>
 
+export type RequestTypeWithQueryPostId<Q, P> = Request<P, {}, {}, Q>
+
 export type RequestWithBodyAndBlog<B> = Request<{}, {}, B, {}, BlogType>
 
 export type SortDataType = {
