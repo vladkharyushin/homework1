@@ -77,11 +77,16 @@ postRoute.post('/:postId/comments', authTokenMiddleware, commentValidation(), as
         req: RequestWithCommentBodyAndParams<PostIdParams, CommentBody>,
         res: Response) => {
         const user = req.user
+
+        console.log('user', user)
+
         if (!user) {
-            res.sendStatus(404)
+            res.sendStatus(401)
             return
         }
         const post = await QueryPostRepository.getPostById(req.params.postId)
+
+        console.log('post', post)
 
         if (!post) {
         res.sendStatus(404)

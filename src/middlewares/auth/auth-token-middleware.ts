@@ -7,11 +7,12 @@ export const authTokenMiddleware = async (req: Request, res: Response, next: Nex
         res.sendStatus(401)
         return
     }
-    const token = req.headers.authorization.split(" ")[1]
+    const accessToken = req.headers.authorization.split(" ")[1]
 
-    const userId = await jwtService.getUserIdByToken(token)
+    const userId = await jwtService.getUserIdByToken(accessToken)
     if (userId) {
         req.user = await QueryUserRepository.getUserById(userId)
-        next()
-    } else res.sendStatus(401)
+        return next()
+    }
+    return res.sendStatus(401)
 }
