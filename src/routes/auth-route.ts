@@ -1,9 +1,10 @@
-import {Router, Response} from "express";
+import {Router, Request, Response} from "express";
 import {authValidation} from "../validators/auth-validator";
 import {RequestWithBody} from "../types/common";
 import {InputAuthType} from "../types/auth/input";
 import {UserService} from "../domain/user-service";
 import {jwtService} from "../application/jwt-service";
+import {authTokenMiddleware} from "../middlewares/auth/auth-token-middleware";
 
 export const authRoute = Router({})
 
@@ -14,7 +15,21 @@ authRoute.post('/login', authValidation(), async (req: RequestWithBody<InputAuth
         res.sendStatus(401)
     } else {
         const token = await jwtService.createJWT(user.toString());
-        res.status(200).send(token)
+        res.status(200).send({token})
         return
     }
 })
+
+authRoute.get('/me', authTokenMiddleware, authValidation(), async (req: Request, res: Response) => {
+        const user = req.user
+        if (!user) {
+            return res.sendStatus(401)
+        }
+        const userData = {
+            email: user.email,
+            login: user.login,
+            userId: user.id,
+        }
+        return res.status(200).send(userData)
+    }
+)
