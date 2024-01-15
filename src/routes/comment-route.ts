@@ -22,38 +22,56 @@ commentRoute.get('/:id', async (req: RequestWithParams<Params>, res: Response) =
     })
 
 commentRoute.put('/:id', authTokenMiddleware, commentValidation(), async (req: RequestWithBodyAndParams<Params, CommentBody>, res: Response) => {
-    // const user = req.user
-    // if (!user) {
-    //     return res.sendStatus(401)
-    // }
-        const id = req.params.id
-        let comment: OutputCommentType | null = await QueryCommentRepository.getCommentById(id)
-        let {content} = req.body
+    const user = req.user
+    if (!user) {
+        return res.sendStatus(401)
+    }
+    const id = req.params.id
+    let comment: OutputCommentType | null = await QueryCommentRepository.getCommentById(id)
+    let {content} = req.body
 
-        if (!comment) {
-            res.sendStatus(404)
-            return
-        }
+    if (!comment) {
+        res.sendStatus(404)
+        return
+    }
 
-    // if (comment.commentatorInfo.userId !== req.user?.id && comment.commentatorInfo.userLogin !== req.user?.login) {
-    //     res.sendStatus(403)
-    //     return
-    // }
+    if (comment.commentatorInfo.userId !== req.user?.id && comment.commentatorInfo.userLogin !== req.user?.login) {
+        res.sendStatus(403)
+        return
+    }
 
         (comment.content = content)
 
-        await CommentService.updateComment(id, comment);
+        await CommentService.updateComment(id, comment)
 
         return res.sendStatus(204)
     })
 
-commentRoute.delete('/:id', authTokenMiddleware, async (req: RequestWithParams<Params>, res: Response) => {
-        const id = req.params.id
-        const status = await CommentRepository.deleteComment(id)
+commentRoute.delete('/:id', authTokenMiddleware, async (req: RequestWithBodyAndParams<Params, CommentBody>, res: Response) => {
+    const user = req.user
+    if (!user) {
+        return res.sendStatus(401)
+    }
+    const id = req.params.id
+    let comment: OutputCommentType | null = await QueryCommentRepository.getCommentById(id)
+    if (!comment) {
+        res.sendStatus(404)
+        return
+    }
+    if (comment.commentatorInfo.userId !== req.user?.id && comment.commentatorInfo.userLogin !== req.user?.login) {
+        res.sendStatus(403)
+        return
+    }
+    await CommentRepository.deleteComment(id)
 
-        if (!status) {
-            res.sendStatus(404)
-            return
-        }
-        return res.sendStatus(204)
+    return res.sendStatus(204)
+
+        // const id = req.params.id
+        // const status = await CommentRepository.deleteComment(id)
+        //
+        // if (!status) {
+        //     res.sendStatus(404)
+        //     return
+        // }
+        // return res.sendStatus(204)
     })

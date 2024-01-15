@@ -2,7 +2,7 @@ import {Router, Response} from "express";
 import {PostRepository} from "../repositories/post-repository";
 import {authMiddleware} from "../middlewares/auth/auth-middleware";
 import {
-    Params, PostIdParams, RequestTypeWithQueryPostId,
+    Params, PostIdParams,
     RequestWithBodyAndBlog,
     RequestWithBodyAndParams, RequestWithCommentBodyAndParams,
     RequestWithParams,
@@ -17,7 +17,7 @@ import {QueryPostRepository} from "../repositories/query-repository/query-post-r
 import {QueryBlogRepository} from "../repositories/query-repository/query-blog-repository";
 import {authTokenMiddleware} from "../middlewares/auth/auth-token-middleware";
 import {commentValidation} from "../validators/comment-validator";
-import {CommentBody, CommentSortDataType} from "../types/comment/input";
+import {CommentBody} from "../types/comment/input";
 import {QueryCommentRepository} from "../repositories/query-repository/query-comment-repository";
 import {PostService} from "../domain/post-service";
 
@@ -56,7 +56,7 @@ postRoute.get('/:postId/comments', async (req: RequestWithParams<Params>, res: R
             res.sendStatus(404)
             return
         }
-        res.send(comment)
+        res.status(200).send(comment)
 })
 
 postRoute.post('/', authMiddleware, postValidation(), async (req: RequestWithBodyAndBlog<OutputPostType>, res: Response) => {
