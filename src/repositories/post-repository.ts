@@ -1,7 +1,8 @@
-import {postCollection} from "../db/db";
+import {commentCollection, postCollection} from "../db/db";
 import {ObjectId} from "mongodb";
 import {InputPostType, UpdatePostData} from "../types/post/input";
 import {PostService} from "../domain/post-service";
+import {CommentType} from "../types/comment/output";
 
 export class PostRepository {
     static async createNewPost(newPost: InputPostType) {
@@ -18,5 +19,15 @@ export class PostRepository {
         const result = await postCollection.deleteOne({ _id: new ObjectId(id) });
 
         return !!result.deletedCount
+    }
+
+//     static async crateCommentToPost(newComment: CommentType) {
+//         const comment = await PostService.createCommentToPost(newComment)
+//         return comment
+//     }
+    static async createComment(newComment: CommentType) {
+        const result = await commentCollection.insertOne({...newComment})
+        newComment.id = result.insertedId.toString();
+        return newComment
     }
 }
