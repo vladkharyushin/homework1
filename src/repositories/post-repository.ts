@@ -21,13 +21,9 @@ export class PostRepository {
         return !!result.deletedCount
     }
 
-//     static async crateCommentToPost(newComment: CommentType) {
-//         const comment = await PostService.createCommentToPost(newComment)
-//         return comment
-//     }
     static async createComment(newComment: CommentType) {
         const result = await commentCollection.insertOne({...newComment})
-        newComment.id = result.insertedId.toString();
+        newComment.id = result.insertedId.toString()
         return newComment
     }
 }

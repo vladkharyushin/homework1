@@ -2,15 +2,15 @@ import {Router, Response} from "express";
 import {PostRepository} from "../repositories/post-repository";
 import {authMiddleware} from "../middlewares/auth/auth-middleware";
 import {
-    Params, PostIdParams,
+    Params, PostIdParams, RequestTypeWithQueryPostId,
     RequestWithBodyAndBlog,
     RequestWithBodyAndParams, RequestWithCommentBodyAndParams,
     RequestWithParams,
     RequestWithQuery,
     SortDataType
 } from "../types/common";
-import {PostParams} from "../types/post/input";
-import {postValidation} from "../validators/posts-validator";
+import {PostParams, PostSortDataType} from "../types/post/input";
+import {allCommentsForPostByIdValidation, postValidation} from "../validators/posts-validator";
 import {OutputPostType} from "../types/post/output";
 import {ObjectId} from "mongodb";
 import {QueryPostRepository} from "../repositories/query-repository/query-post-repository";
@@ -48,15 +48,22 @@ postRoute.get('/:id', async (req: RequestWithParams<Params>, res: Response) => {
     res.status(200).send(post)
 })
 
-postRoute.get('/:postId/comments', async (req: RequestWithParams<Params>, res: Response) => {
-        const id = req.params.id
-        const comment = await QueryCommentRepository.getCommentById(id)
+postRoute.get('/:postId/comments', allCommentsForPostByIdValidation(), async (req: RequestTypeWithQueryPostId<PostSortDataType, PostIdParams>, res: Response) => {
+    const sortData = {
+        pageNumber: req.query.pageNumber,
+        pageSize: req.query.pageSize,
+        sortBy: req.query.sortBy,
+        sortDirection: req.query.sortDirection,
+    }
+    const postId = req.params.postId
 
-        if (!comment) {
+    const comments = await QueryPostRepository.getAllComments({...sortData, postId})
+
+        if (!comments) {
             res.sendStatus(404)
             return
         }
-        res.status(200).send(comment)
+        res.status(200).send(comments)
 })
 
 postRoute.post('/', authMiddleware, postValidation(), async (req: RequestWithBodyAndBlog<OutputPostType>, res: Response) => {

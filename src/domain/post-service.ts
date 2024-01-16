@@ -1,10 +1,9 @@
 import {InputPostType, UpdatePostData} from "../types/post/input";
 import {PostType} from "../types/post/output";
-import {commentCollection, postCollection} from "../db/db";
+import {postCollection} from "../db/db";
 import {ObjectId} from "mongodb";
 import {InputCommentType} from "../types/comment/input";
 import {CommentType} from "../types/comment/output";
-import {QueryPostRepository} from "../repositories/query-repository/query-post-repository";
 import {PostRepository} from "../repositories/post-repository";
 
 export class PostService {
@@ -45,9 +44,6 @@ export class PostService {
         }
         const comment = await PostRepository.createComment(createdComment)
         return comment
-        // const result = await commentCollection.insertOne({...createdComment})
-        // createdComment.id = result.insertedId.toString()
-        // return createdComment
     }
 
     static async createCommentToPost(
@@ -56,14 +52,19 @@ export class PostService {
             userId: string,
             userLogin: string
     ) {
-        const comment = await PostService.createComment({
+        const comment = await this.createComment({
             content,
-            postId,
             commentatorInfo: {
                 userId,
                 userLogin
-            }
+            },
+            postId,
         })
-        return comment
+        return {
+            id: comment.id,
+            content: comment.content,
+            commentatorInfo: comment.commentatorInfo,
+            createdAt: comment.createdAt
+        }
     }
 }

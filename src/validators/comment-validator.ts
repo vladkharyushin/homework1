@@ -1,6 +1,7 @@
-import {body} from "express-validator";
+import {body, param} from "express-validator";
 import {inputModelValidation} from "../middlewares/inputModel/input-model-validation";
 import {notFoundValidation} from "./not-found-validator";
+import {QueryPostRepository} from "../repositories/query-repository/query-post-repository";
 
 const contentValidation = body("content")
     .isString()
@@ -13,3 +14,15 @@ export const commentValidation = () => [
     inputModelValidation,
     notFoundValidation,
 ]
+
+export const postIdInParamsValidation = param("postId")
+    .isString()
+    .trim()
+    .custom(async (value) => {
+        const post = await QueryPostRepository.getPostById(value)
+
+        if (!post) {
+            throw new Error("Incorrect postId");
+        }
+    })
+    .withMessage("Incorrect postID")

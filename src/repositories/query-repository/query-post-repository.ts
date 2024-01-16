@@ -1,8 +1,10 @@
 import {SortDataType} from "../../types/common";
-import {postCollection} from "../../db/db";
+import {commentCollection, postCollection} from "../../db/db";
 import {postMapper} from "../../types/post/post-mapper";
 import {OutputPostType} from "../../types/post/output";
 import {ObjectId} from "mongodb";
+import {CommentSortDataType} from "../../types/comment/input";
+import {commentMapper} from "../../types/comment/comment-mapper";
 
 export class QueryPostRepository{
     static async getAllPosts(sortData: SortDataType) {
@@ -46,5 +48,40 @@ export class QueryPostRepository{
             return null
         }
         return postMapper(post)
+    }
+
+    static async getAllComments(sortData: CommentSortDataType) {
+        const sortDirection = sortData.sortDirection ?? "desc"
+        const sortBy = sortData.sortBy ?? "createdAt"
+        const pageNumber = sortData.pageNumber ?? 1
+        const pageSize = sortData.pageSize ?? 10
+        const postId = sortData.postId
+
+        let filter = {}
+
+        if (postId) {
+            filter = {
+                postId: postId,
+            }
+        }
+
+        const comments = await commentCollection
+            .find(filter)
+            .sort(sortBy, sortDirection)
+            .skip((+pageNumber - 1) * +pageSize)
+            .limit(+pageSize)
+            .toArray()
+
+        const totalCount = await commentCollection.countDocuments(filter)
+
+        const pageCount = Math.ceil(totalCount / +pageSize)
+
+        return {
+            pagesCount: pageCount,
+            page: +pageNumber,
+            pageSize: +pageSize,
+            totalCount: +totalCount,
+            items: comments.map(commentMapper)
+        }
     }
 }
