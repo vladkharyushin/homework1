@@ -3,6 +3,7 @@ import {jwtService} from "../../application/jwt-service";
 import {QueryUserRepository} from "../../repositories/query-repository/query-user-repository";
 
 export const authTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.headers.authorization, 'req.headers.authorization')
     if (!req.headers.authorization) {
         res.sendStatus(401)
         return

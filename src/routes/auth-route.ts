@@ -12,7 +12,7 @@ authRoute.post('/login', authValidation(), async (req: RequestWithBody<InputAuth
     const user = await UserService.checkCredentials(req.body.loginOrEmail, req.body.password)
 
     if (user) {
-        const accessToken = await jwtService.createJWT(user.toString())
+        const accessToken = await jwtService.createJWT(user._id.toString())
         return res.status(200).send({accessToken})
     }
     return res.sendStatus(401)

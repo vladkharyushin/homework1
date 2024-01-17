@@ -7,6 +7,15 @@ export type UserType = {
     passwordSalt: string
 }
 
+export type UserDbType = {
+    login: string
+    email: string
+    createdAt: string
+    passwordHash: string
+    passwordSalt: string
+}
+
+
 export type UserSortDataType = {
     sortBy?: string
     sortDirection?: 'asc' | 'desc'

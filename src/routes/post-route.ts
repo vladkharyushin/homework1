@@ -18,7 +18,6 @@ import {QueryBlogRepository} from "../repositories/query-repository/query-blog-r
 import {authTokenMiddleware} from "../middlewares/auth/auth-token-middleware";
 import {commentValidation} from "../validators/comment-validator";
 import {CommentBody} from "../types/comment/input";
-import {QueryCommentRepository} from "../repositories/query-repository/query-comment-repository";
 import {PostService} from "../domain/post-service";
 
 export const postRoute = Router({})

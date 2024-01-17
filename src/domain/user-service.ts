@@ -1,7 +1,8 @@
 import {InputUserType} from "../types/user/input";
-import {OutputUserType} from "../types/user/output";
+import {OutputUserType, UserDbType, UserType} from "../types/user/output";
 import bcrypt from "bcrypt";
 import {userCollection} from "../db/db";
+import {WithId} from "mongodb";
 
 export class UserService{
     static async _generateHash(password: string, salt: string) {
@@ -40,17 +41,18 @@ export class UserService{
         })
     }
 
-    static async checkCredentials(loginOrEmail: string, password: string): Promise<boolean> {
+    static async checkCredentials(loginOrEmail: string, password: string): Promise<WithId<UserDbType> | null> {
         const user = await UserService.findByLoginOrEmail(loginOrEmail);
 
         if (!user)
-            return false
+            return null
 
         const passwordHash = await this._generateHash(password, user.passwordSalt)
 
         if (user.passwordHash !== passwordHash) {
-            return false
+            return null
         }
-        return true
+
+        return user
     }
 }

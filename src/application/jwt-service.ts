@@ -11,6 +11,7 @@ export class jwtService {
             const result: any = jwt.verify(accessToken, JWT_SECRET)
             return result.userId
         } catch (error) {
+            console.log(error,'error in verify')
             return null
         }
     }
