@@ -5,6 +5,7 @@ import {InputAuthType} from "../types/auth/input";
 import {UserService} from "../domain/user-service";
 import {jwtService} from "../application/jwt-service";
 import {authTokenMiddleware} from "../middlewares/auth/auth-token-middleware";
+import nodemailer from 'nodemailer'
 
 export const authRoute = Router({})
 
