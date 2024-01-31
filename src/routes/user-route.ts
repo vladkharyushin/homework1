@@ -7,6 +7,7 @@ import {InputUserType} from "../types/user/input";
 import {ObjectId} from "mongodb";
 import {UserRepository} from "../repositories/user-repository";
 import {authMiddleware} from "../middlewares/auth/auth-middleware";
+import {UserService} from "../domain/user-service";
 
 export const userRoute = Router({})
 
@@ -27,7 +28,7 @@ userRoute.get('/', authMiddleware, async (req: RequestWithQuery<UserSortDataType
 
 userRoute.post('/', authMiddleware, userValidation(), async (req: RequestWithBody<InputUserType>, res: Response) => {
 
-    const user = await UserRepository.createUser(req.body)
+    const user = await UserService.createUser(req.body)
 
     return res.status(201).send(user)
 })
