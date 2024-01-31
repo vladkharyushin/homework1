@@ -1,14 +1,11 @@
 import {MongoClient} from "mongodb";
 import {BlogType} from "../types/blog/output";
 import {PostType} from "../types/post/output";
-import {UserType} from "../types/user/output";
-import {AuthType} from "../types/auth/input";
+import {UserDbType} from "../types/user/output";
 import {CommentType} from "../types/comment/output";
 import {mongoUrl} from "../config";
 
-export const port = 80;
-
-//const mongoUrl = process.env.MONGO_URL
+export const port = 80
 
 console.log(mongoUrl)
 
@@ -24,9 +21,7 @@ export const blogCollection = db.collection<BlogType>('blog')
 
 export const postCollection = db.collection<PostType>('post')
 
-export const userCollection = db.collection<UserType>('user')
-
-export const authCollection = db.collection<AuthType>('auth')
+export const userCollection = db.collection<UserDbType>('user')
 
 export const commentCollection = db.collection<CommentType>("comments")
 

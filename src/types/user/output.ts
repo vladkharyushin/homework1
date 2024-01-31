@@ -1,11 +1,4 @@
-export type UserType = {
-    id?: string
-    login: string
-    email: string
-    createdAt: string
-    passwordHash: string
-    passwordSalt: string
-}
+import {ObjectId, WithId} from "mongodb";
 
 export type UserSortDataType = {
     sortBy?: string
@@ -15,6 +8,26 @@ export type UserSortDataType = {
     searchLoginTerm?: string
     searchEmailTerm?: string
 }
+
+export type UserType = {
+    _id?: ObjectId
+    login: string
+    email: string
+    createdAt: string
+    passwordHash: string
+}
+
+export type UserDbType = WithId<{
+    login: string
+    email: string
+    createdAt: Date
+    passwordHash: string
+    emailConfirmation: {
+        confirmationCode: string
+        expirationDate: Date
+        isConfirmed: boolean
+    }
+}>
 
 export type OutputUserType = {
     id: string
