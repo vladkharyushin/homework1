@@ -42,26 +42,26 @@ authRoute.post('/registration', async (req: Request, res: Response) => {
     const registrationResult = await authService.createUserByRegistration(userData)
 
     if (registrationResult) {
-        res.status(204)
+        res.status(204).send(registrationResult)
     } else {
-        res.status(400)
+        res.status(400).send({})
     }
 })
 
 authRoute.post('/registration-confirmation', async (req: Request, res: Response) => {
     const result = await authService.confirmEmail(req.body.code)
     if (result) {
-        res.status(204)
+        res.status(204).send(result)
     } else {
-        res.status(400)
+        res.status(400).send({})
     }
 })
 
 authRoute.post('/registration-confirmation-email-resending', async (req: Request, res: Response) => {
     const resendCode = await authService.resendEmail(req.body.email)
     if (resendCode) {
-        res.status(204)
+        res.status(204).send(resendCode)
     } else {
-        res.status(400)
+        res.status(400).send({})
     }
 })
