@@ -16,8 +16,20 @@ export class UserRepository {
     static async findByLoginOrEmail(loginOrEmail: string) {
         return userCollection.findOne({
             $or: [
-                {email: loginOrEmail},
-                {login: loginOrEmail}
+                // {email: loginOrEmail},
+                // {login: loginOrEmail}
+                {
+                    email: {
+                        $regex: loginOrEmail,
+                        $options: "i"
+                    }
+                },
+                {
+                    login: {
+                        $regex: loginOrEmail,
+                        $options: "i"
+                    }
+                }
             ]
         })
     }
