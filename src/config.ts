@@ -6,3 +6,5 @@ export const mongoUrl = process.env.MONGO_URL as string
 export const JWT_SECRET = process.env.JWT_SECRET || '123'
 
 export const MAIL_RU_PASS = process.env.MAIL_RU_PASS
+
+export const GMAIL_PASS = process.env.MGMAIL_PASS
