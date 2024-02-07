@@ -6,6 +6,8 @@ import {UserService} from "../domain/user-service";
 import {jwtService} from "../application/jwt-service";
 import {authTokenMiddleware} from "../middlewares/auth/auth-token-middleware";
 import {authService} from "../domain/auth-service";
+import {userValidation} from "../validators/user-validator";
+import {registrationValidator} from "../validators/registration-validator";
 
 export const authRoute = Router({})
 
@@ -32,7 +34,7 @@ authRoute.get('/me', authTokenMiddleware, authValidation(), async (req: Request,
         return res.status(200).send(userData)
 })
 
-authRoute.post('/registration', async (req: Request, res: Response) => {
+authRoute.post('/registration', userValidation(), registrationValidator, async (req: Request, res: Response) => {
     const userData = {
         login: req.body.login,
         email: req.body.email,
