@@ -1,22 +1,22 @@
 import nodemailer from 'nodemailer'
-import {GMAIL_PASS} from "../config";
+import {MAIL_RU_PASS} from "../config";
 
 
 export class EmailAdapter {
     static async sendEmail(email: string, subject: string, message: string) {
         let transport = nodemailer.createTransport({
-            service: 'Gmail',
+            service: 'Mail.ru',
             secure: false,
             auth: {
-                user: 'veronicavlad130@gmail.ru',
-                pass: GMAIL_PASS
+                user: 'vx3110@mail.ru',
+                pass: MAIL_RU_PASS
             },
             tls: {
                 rejectUnauthorized: false
             }
         })
         let sendingMail = await transport.sendMail({
-            from: 'Vlad <veronicavlad130@gmail.ru>',
+            from: 'Vlad <vx3110@mail.ru>',
             to: email,
             subject: subject,
             html: message,
