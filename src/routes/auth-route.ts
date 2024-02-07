@@ -59,7 +59,7 @@ authRoute.post('/registration-confirmation', async (req: Request, res: Response)
     }
 })
 
-authRoute.post('/registration-confirmation-email-resending', async (req: Request, res: Response) => {
+authRoute.post('/registration-email-resending', async (req: Request, res: Response) => {
     const resendCode = await authService.resendEmail(req.body.email)
     if (resendCode) {
         res.status(204).send(resendCode)
