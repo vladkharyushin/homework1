@@ -44,7 +44,7 @@ authRoute.post('/registration', userValidation(), registrationValidator, async (
     const registrationResult = await authService.createUserByRegistration(userData)
 
     if (registrationResult) {
-        res.status(204).send(registrationResult)
+        res.status(204).send()
     } else {
         res.status(400).send({})
     }
@@ -53,7 +53,7 @@ authRoute.post('/registration', userValidation(), registrationValidator, async (
 authRoute.post('/registration-confirmation', async (req: Request, res: Response) => {
     const result = await authService.confirmEmail(req.body.code)
     if (result) {
-        res.status(204).send(result)
+        res.status(204).send()
     } else {
         res.status(400).send({})
     }
@@ -62,7 +62,7 @@ authRoute.post('/registration-confirmation', async (req: Request, res: Response)
 authRoute.post('/registration-email-resending', async (req: Request, res: Response) => {
     const resendCode = await authService.resendEmail(req.body.email)
     if (resendCode) {
-        res.status(204).send(resendCode)
+        res.status(204).send()
     } else {
         res.status(400).send({})
     }
