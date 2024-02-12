@@ -49,6 +49,15 @@ authRoute.post('/registration', userValidation(), registrationValidator, async (
         res.sendStatus(400)
     }
 })
+authRoute.post('/registration-email-resending', async (req: Request, res: Response) => {
+
+    const resendCode = await authService.resendEmail(req.body.email)
+    if (resendCode) {
+        res.sendStatus(204)
+    } else {
+        res.sendStatus(400)
+    }
+})
 
 authRoute.post('/registration-confirmation', async (req: Request, res: Response) => {
     const result = await authService.confirmEmail(req.body.code)
@@ -59,11 +68,3 @@ authRoute.post('/registration-confirmation', async (req: Request, res: Response)
     }
 })
 
-authRoute.post('/registration-email-resending', async (req: Request, res: Response) => {
-    const resendCode = await authService.resendEmail(req.body.email)
-    if (resendCode) {
-        res.sendStatus(204)
-    } else {
-        res.sendStatus(400)
-    }
-})

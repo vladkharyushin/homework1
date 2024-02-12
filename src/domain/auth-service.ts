@@ -35,7 +35,7 @@ export class authService {
             )
         } catch (error) {
             console.log('Send email error', error)
-            await UserRepository.deleteUserById(user._id.toString())
+           // await UserRepository.deleteUserById(user._id.toString())
             return null
         }
         return userMapper(user)
@@ -43,6 +43,7 @@ export class authService {
 
     static async resendEmail(email: string): Promise<any> {
         const user = await UserRepository.findByLoginOrEmail(email)
+        console.log(user)
         if (!user)
             return null
         try {
@@ -50,9 +51,10 @@ export class authService {
                 user.email,
                 user.emailConfirmation.confirmationCode
             )
+            return user
         } catch (error) {
             console.log('Send email error', error)
-            await UserRepository.deleteUserById(user._id.toString())
+            //await UserRepository.deleteUserById(user._id.toString())
             return null
         }
     }
