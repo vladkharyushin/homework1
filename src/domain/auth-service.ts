@@ -49,7 +49,7 @@ export class authService {
         try {
             await emailsManager.resendConfirmationMessage(
                 user.email,
-                user.emailConfirmation.confirmationCode
+                randomUUID()
             )
             return user
         } catch (error) {
