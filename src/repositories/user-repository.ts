@@ -46,4 +46,8 @@ export class UserRepository {
         )
         return result.modifiedCount === 1
     }
+
+    static async updateConfirmationCode(id: string, code: string) {
+
+    }
 }

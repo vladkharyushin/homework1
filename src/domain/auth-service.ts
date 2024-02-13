@@ -7,6 +7,7 @@ import {add} from "date-fns";
 import {UserRepository} from "../repositories/user-repository";
 import {emailsManager} from "../managers/email-manager";
 import {userMapper} from "../types/user/user-mapper";
+import {userCollection} from "../db/db";
 
 export class authService {
     static async createUserByRegistration(newUser: InputUserType): Promise<OutputUserType | null> {
@@ -43,13 +44,20 @@ export class authService {
 
     static async resendEmail(email: string): Promise<any> {
         const user = await UserRepository.findByLoginOrEmail(email)
-        console.log(user)
+
         if (!user)
             return null
+
+        const newConfirmationCode = randomUUID()
+
+        await UserRepository.updateConfirmationCode(user._id.toString(), newConfirmationCode)
+
+        console.log(user)
+
         try {
             await emailsManager.resendConfirmationMessage(
                 user.email,
-                randomUUID()
+                newConfirmationCode
             )
             return user
         } catch (error) {
