@@ -55,7 +55,7 @@ authRoute.post('/registration-email-resending', async (req: Request, res: Respon
     if (resendCode) {
         res.sendStatus(204)
     } else {
-        res.status(400).send({})
+        res.status(400).send({errorsMessages: [{message: "Email already confirmed", field: "email"}]})
     }
 })
 
