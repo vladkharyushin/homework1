@@ -64,7 +64,7 @@ authRoute.post('/registration-confirmation', async (req: Request, res: Response)
     if (result) {
         res.sendStatus(204)
     } else {
-        res.sendStatus(400)
+        res.status(400).send({errorsMessages: [{message: "Confirmation code already confirmed", field: "code"}]})
     }
 })
 
