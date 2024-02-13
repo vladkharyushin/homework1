@@ -7,7 +7,6 @@ import {add} from "date-fns";
 import {UserRepository} from "../repositories/user-repository";
 import {emailsManager} from "../managers/email-manager";
 import {userMapper} from "../types/user/user-mapper";
-import {userCollection} from "../db/db";
 
 export class authService {
     static async createUserByRegistration(newUser: InputUserType): Promise<OutputUserType | null> {
@@ -50,7 +49,7 @@ export class authService {
 
         const newConfirmationCode = randomUUID()
 
-        await UserRepository.updateConfirmationCode(user._id.toString(), newConfirmationCode)
+        await UserRepository.updateConfirmationCode(user._id, newConfirmationCode)
 
         console.log(user)
 

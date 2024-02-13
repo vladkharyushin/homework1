@@ -47,7 +47,11 @@ export class UserRepository {
         return result.modifiedCount === 1
     }
 
-    static async updateConfirmationCode(id: string, code: string) {
-
+    static async updateConfirmationCode(_id: ObjectId, code: string) {
+        let result = await userCollection.updateOne(
+            {_id},
+            {$set: {'emailConfirmation.confirmationCode': code}}
+        )
+        return result.modifiedCount === 1
     }
 }
