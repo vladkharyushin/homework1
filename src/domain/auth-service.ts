@@ -47,6 +47,9 @@ export class authService {
         if (!user)
             return null
 
+        if(user.emailConfirmation.isConfirmed)
+            return null
+
         const newConfirmationCode = randomUUID()
 
         await UserRepository.updateConfirmationCode(user._id, newConfirmationCode)

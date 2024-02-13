@@ -55,7 +55,7 @@ authRoute.post('/registration-email-resending', async (req: Request, res: Respon
     if (resendCode) {
         res.sendStatus(204)
     } else {
-        res.sendStatus(400)
+        res.status(400).send({})
     }
 })
 
