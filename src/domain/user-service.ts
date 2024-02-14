@@ -30,7 +30,7 @@ export class UserService {
                     hours: 1,
                     minutes: 30
                 }),
-                isConfirmed: false
+                isConfirmed: true
             }
         }
         await UserRepository.createUser(createdUser)
