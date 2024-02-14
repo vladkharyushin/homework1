@@ -7,16 +7,19 @@ import {add} from "date-fns";
 import {UserRepository} from "../repositories/user-repository";
 import {emailsManager} from "../managers/email-manager";
 import {userMapper} from "../types/user/user-mapper";
+import bcrypt from "bcrypt";
 
 export class authService {
     static async createUserByRegistration(newUser: InputUserType): Promise<OutputUserType | null> {
-        const passwordHash = await UserService._generateHash(newUser.password)
+        const passwordSalt = await bcrypt.genSalt(10)
+        const passwordHash = await UserService._generateHash(newUser.password, passwordSalt)
         const user: UserDbType = {
             _id: new ObjectId(),
             login: newUser.login,
             email: newUser.email,
             createdAt: new Date(),
             passwordHash,
+            passwordSalt,
             emailConfirmation: {
                 confirmationCode: randomUUID(),
                 expirationDate: add(new Date(), {

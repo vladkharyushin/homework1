@@ -22,6 +22,7 @@ export type UserDbType = WithId<{
     email: string
     createdAt: Date
     passwordHash: string
+    passwordSalt: string
     emailConfirmation: {
         confirmationCode: string
         expirationDate: Date

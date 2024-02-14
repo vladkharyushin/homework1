@@ -8,13 +8,14 @@ import {UserRepository} from "../repositories/user-repository";
 import {userMapper} from "../types/user/user-mapper";
 
 export class UserService {
-    static async _generateHash(password: string) {
-        const hash = await bcrypt.hash(password, 10)
+    static async _generateHash(password: string, passwordSalt: string) {
+        const hash = await bcrypt.hash(password, passwordSalt)
         return hash
     }
 
     static async createUser(newUser: InputUserType): Promise<OutputUserType> {
-        const passwordHash = await this._generateHash(newUser.password)
+        const passwordSalt = await bcrypt.genSalt(10)
+        const passwordHash = await this._generateHash(newUser.password, passwordSalt)
 
         const createdUser: UserDbType = {
             _id: new ObjectId(),
@@ -22,6 +23,7 @@ export class UserService {
             email: newUser.email,
             createdAt: new Date(),
             passwordHash,
+            passwordSalt,
             emailConfirmation: {
                 confirmationCode: randomUUID(),
                 expirationDate: add(new Date(), {
@@ -47,7 +49,7 @@ export class UserService {
             return null
         }
 
-        const passwordHash = await this._generateHash(password)
+        const passwordHash = await this._generateHash(password, user.passwordSalt)
 
         if (user.passwordHash !== passwordHash) {
             return null
