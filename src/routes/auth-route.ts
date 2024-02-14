@@ -8,6 +8,7 @@ import {authTokenMiddleware} from "../middlewares/auth/auth-token-middleware";
 import {authService} from "../domain/auth-service";
 import {userValidation} from "../validators/user-validator";
 import {registrationValidator} from "../validators/registration-validator";
+import {UserRepository} from "../repositories/user-repository";
 
 export const authRoute = Router({})
 
@@ -49,22 +50,42 @@ authRoute.post('/registration', userValidation(), registrationValidator, async (
         res.sendStatus(400)
     }
 })
+
 authRoute.post('/registration-email-resending', async (req: Request, res: Response) => {
+    const user = await UserRepository.findByLoginOrEmail(req.body.email)
 
     const resendCode = await authService.resendEmail(req.body.email)
+
     if (resendCode) {
         res.sendStatus(204)
-    } else {
+
+    } else if (!user) {
+        res.status(400).send({errorsMessages: [{message: "Email not found", field: "email"}]})
+
+    } else if (user.emailConfirmation.isConfirmed) {
         res.status(400).send({errorsMessages: [{message: "Email already confirmed", field: "email"}]})
+
+    } else {
+        res.sendStatus(400)
     }
 })
 
 authRoute.post('/registration-confirmation', async (req: Request, res: Response) => {
+    const user = await UserService.findUserByConfirmationCode(req.body.code)
+
     const result = await authService.confirmEmail(req.body.code)
+
     if (result) {
         res.sendStatus(204)
-    } else {
+
+    } else if (!user) {
+        res.status(400).send({errorsMessages: [{message: "Incorrect code", field: "code"}]})
+
+    } else if (user.emailConfirmation.isConfirmed) {
         res.status(400).send({errorsMessages: [{message: "Confirmation code already confirmed", field: "code"}]})
+
+    } else {
+        res.sendStatus(400)
     }
 })
 
