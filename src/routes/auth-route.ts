@@ -60,11 +60,21 @@ authRoute.post('/registration-email-resending', async (req: Request, res: Respon
 })
 
 authRoute.post('/registration-confirmation', async (req: Request, res: Response) => {
+    const user = await UserService.findUserByConfirmationCode(req.body.code)
+
     const result = await authService.confirmEmail(req.body.code)
+
     if (result) {
         res.sendStatus(204)
-    } else {
+
+    } else if (!user) {
+        res.status(400).send({errorsMessages: [{message: "Confirmation code incorrect", field: "code"}]})
+
+    } else if (user.emailConfirmation.isConfirmed) {
         res.status(400).send({errorsMessages: [{message: "Confirmation code already confirmed", field: "code"}]})
+
+    } else {
+        res.sendStatus(400)
     }
 })
 
