@@ -6,10 +6,13 @@ import {testingRoute} from "./routes/testing-route";
 import {userRoute} from "./routes/user-route";
 import {authRoute} from "./routes/auth-route";
 import {commentRoute} from "./routes/comment-route";
+import cookieParser from "cookie-parser";
 
 export const app = express()
 
 app.use(express.json())
+
+app.use(cookieParser())
 
 app.use('/testing', testingRoute)
 app.use('/videos', videoRoute)
