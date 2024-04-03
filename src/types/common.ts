@@ -50,3 +50,17 @@ export type UserIdParams = {
     id: any
     userId: string
 }
+
+export interface ResultCodeHandler<T> {
+    success: boolean
+    data: T | null
+    error?: string
+}
+
+export const resultCodeMap = <T>(success: boolean, data: T, error?: string) => {
+    return {
+        success: success,
+        data: data,
+        error: error
+    }
+}
