@@ -4,6 +4,8 @@ import {PostType} from "../types/post/output";
 import {UserDbType} from "../types/user/output";
 import {CommentType} from "../types/comment/output";
 import {mongoUrl} from "../config";
+import {JwtPayload} from "jsonwebtoken";
+import {DevicesDbModel} from "../types/device/DeviceDBModel";
 
 export const port = 80
 
@@ -24,6 +26,10 @@ export const postCollection = db.collection<PostType>('post')
 export const userCollection = db.collection<UserDbType>('user')
 
 export const commentCollection = db.collection<CommentType>("comments")
+
+export const tokenCollection = db.collection<JwtPayload>('token')
+
+export const DevicesCollection = db.collection<DevicesDbModel>('devices_model')
 
 export const runDb = async () => {
     try {
