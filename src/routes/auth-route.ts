@@ -9,6 +9,7 @@ import {authService} from "../domain/auth-service";
 import {userValidation} from "../validators/user-validator";
 import {registrationValidator} from "../validators/registration-validator";
 import {UserRepository} from "../repositories/user-repository";
+import {tokenCollection} from "../db/db";
 
 export const authRoute = Router({})
 
@@ -17,10 +18,31 @@ authRoute.post('/login', authValidation(), async (req: RequestWithBody<InputAuth
     console.log(user)
 
     if (user) {
-        const accessToken = await jwtService.createJWT(user._id.toString())
-        return res.status(200).send({accessToken})
+        const accessToken = await jwtService.createAccessToken(user._id.toString())
+
+        const refreshToken = await jwtService.createRefreshToken(user._id.toString())
+
+        return res.status(200).cookie('refreshToken', refreshToken, {httpOnly: true, secure: true}).send({accessToken})
     }
     return res.sendStatus(401)
+})
+
+authRoute.post('/logout', async (req: Request, res: Response) => {
+    const tokenRefresh = req.cookies.refreshToken
+
+    if (!tokenRefresh) {
+        return res.sendStatus(401)
+    }
+
+    const blackToken = await tokenCollection.findOne({token: tokenRefresh});
+
+    if (blackToken) {
+        return res.sendStatus(401)
+    }
+
+    await tokenCollection.insertOne({token: tokenRefresh})
+
+    return res.sendStatus(204)
 })
 
 authRoute.get('/me', authTokenMiddleware, authValidation(), async (req: Request, res: Response) => {
@@ -89,3 +111,24 @@ authRoute.post('/registration-confirmation', async (req: Request, res: Response)
     }
 })
 
+authRoute.post('/refresh-token', async (req: Request, res: Response) => {
+    const token = req.cookies.refreshToken
+
+    if (!token) {
+        return res.sendStatus(401)
+    }
+    const blackToken = await tokenCollection.findOne({token: token})
+    if (blackToken) {
+        return res.sendStatus(401)
+    }
+
+    const resultUpdateToken = await authService.updateRefreshToken(token)
+
+    if (!resultUpdateToken.success) {
+        return res.sendStatus(401)
+    }
+    return res
+        .cookie('refreshToken', resultUpdateToken!.data!.refreshToken, {httpOnly: true, secure: true})
+        .status(200)
+        .send({accessToken: resultUpdateToken!.data!.accessToken})
+})
