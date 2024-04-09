@@ -8,6 +8,12 @@ import {UserRepository} from "../repositories/user-repository";
 import {emailsManager} from "../managers/email-manager";
 import {userMapper} from "../types/user/user-mapper";
 import bcrypt from "bcrypt";
+import {jwtService} from "../application/jwt-service";
+import {resultCodeMap} from "../types/common";
+import {tokenCollection, userCollection} from "../db/db";
+import {JwtPayload} from "jsonwebtoken";
+import {DeviceRepository} from "../repositories/device-repository";
+import {DevicesDbModel} from "../types/device/DeviceDBModel";
 
 export class authService {
     static async createUserByRegistration(newUser: InputUserType): Promise<OutputUserType | null> {
@@ -38,7 +44,7 @@ export class authService {
             )
         } catch (error) {
             console.log('Send email error', error)
-           // await UserRepository.deleteUserById(user._id.toString())
+            // await UserRepository.deleteUserById(user._id.toString())
             return null
         }
         return userMapper(user)
@@ -50,7 +56,7 @@ export class authService {
         if (!user)
             return null
 
-        if(user.emailConfirmation.isConfirmed)
+        if (user.emailConfirmation.isConfirmed)
             return null
 
         const newConfirmationCode = randomUUID()
@@ -85,5 +91,56 @@ export class authService {
         const result = await UserRepository.updateConfirmation(user._id)
 
         return result
+    }
+
+    static async updateRefreshToken(token: string): Promise<{
+        data: {} | null
+        success: boolean
+        error: string | undefined
+    }> {
+        const decodeToken: JwtPayload | null = await jwtService.decodeToken(token)
+        if (!decodeToken) {
+            return resultCodeMap(false, null, 'Unauthorized')
+        }
+
+        await tokenCollection.insertOne({token: token})
+
+        const userId: string | null = await jwtService.getUserIdByToken(token)
+
+        if (!userId) {
+            return resultCodeMap(false, null, "Unauthorized")
+        }
+
+        const user = await userCollection.findOne({id: userId})
+
+        if (!user) {
+            return resultCodeMap(false, null, "Unauthorized")
+        }
+
+        const device: DevicesDbModel | null = await DeviceRepository.findDeviceByDeviceId(decodeToken.deviceId)
+
+        console.log("device", device)
+
+        if (!device) {
+            return resultCodeMap(false, null, "Unauthorized")
+        }
+
+        const newAccessToken = await jwtService.createAccessToken(user._id.toString())
+
+        const newRefreshToken = await jwtService.createRefreshToken(user._id.toString())
+
+        const newTokens = {
+            newAccessToken,
+            newRefreshToken
+        }
+
+        const decodeNewRT = await jwtService.decodeToken(newRefreshToken)
+
+        const newIssAt = decodeNewRT!.iat
+        const newExpAt = decodeNewRT!.exp
+
+        await DeviceRepository.updateIssAndExAt(device.deviceId, newIssAt!, newExpAt!)
+
+        return resultCodeMap(true, newTokens)
     }
 }
